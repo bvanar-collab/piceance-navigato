@@ -87,17 +87,52 @@ export const NOWIDataManager = () => {
           <CardContent className="space-y-6">
             <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
               <h4 className="font-semibold text-purple-800 mb-3">💻 Step 3 Instructions:</h4>
-              <div className="space-y-2 text-sm text-purple-700">
-                <div><strong>3.1)</strong> Open Terminal (Mac) or Command Prompt (Windows)</div>
-                <div><strong>3.2)</strong> Type: <code className="bg-purple-100 px-1 rounded">cd Downloads</code> and press Enter</div>
-                <div><strong>3.3)</strong> Type: <code className="bg-purple-100 px-1 rounded">ls</code> (Mac) or <code className="bg-purple-100 px-1 rounded">dir</code> (Windows) to see files</div>
-                <div><strong>3.4)</strong> Verify you see "piceance_agent_bootstrap.sh" in the list</div>
-                <div><strong>3.5)</strong> Type: <code className="bg-purple-100 px-1 rounded">chmod +x piceance_agent_bootstrap.sh</code> and press Enter (Mac/Linux only)</div>
-                <div><strong>3.6)</strong> Right-click in terminal and select "Paste" to paste the command from Step 2</div>
-                <div><strong>3.7)</strong> Press Enter to start the script</div>
-                <div><strong>3.8)</strong> Wait 2-15 minutes - you'll see "Building Docker image..." messages</div>
-                <div><strong>3.9)</strong> When complete, you'll see "✅ Done. Deliverable: ..."</div>
-                <div><strong>3.10)</strong> The Excel file is ready in the piceance-nowi folder</div>
+              <div className="space-y-3 text-sm text-purple-700">
+                <div className="font-medium">📁 Opening Terminal in Downloads Directory:</div>
+                
+                <div className="pl-4 space-y-2">
+                  <div><strong>Mac Users:</strong></div>
+                  <div className="pl-4 space-y-1">
+                    <div>• Open Finder (click Finder icon in dock)</div>
+                    <div>• Click "Downloads" in the sidebar</div>
+                    <div>• Right-click in empty space in Downloads folder</div>
+                    <div>• Select "New Terminal at Folder" (or "Services" → "New Terminal at Folder")</div>
+                    <div>• Terminal opens automatically in Downloads directory</div>
+                  </div>
+                </div>
+
+                <div className="pl-4 space-y-2">
+                  <div><strong>Windows Users:</strong></div>
+                  <div className="pl-4 space-y-1">
+                    <div>• Open File Explorer (Windows key + E)</div>
+                    <div>• Click "Downloads" in the left sidebar</div>
+                    <div>• Hold Shift key and right-click in empty space</div>
+                    <div>• Select "Open PowerShell window here" or "Open command window here"</div>
+                    <div>• Command prompt opens in Downloads directory</div>
+                  </div>
+                </div>
+
+                <div className="pl-4 space-y-2">
+                  <div><strong>Alternative Method (All Systems):</strong></div>
+                  <div className="pl-4 space-y-1">
+                    <div>• Press Cmd+Space (Mac) or Windows key (PC)</div>
+                    <div>• Type "terminal" (Mac) or "cmd" (Windows) and press Enter</div>
+                    <div>• Type: <code className="bg-purple-100 px-1 rounded">cd Downloads</code> and press Enter</div>
+                    <div>• You are now in the Downloads directory</div>
+                  </div>
+                </div>
+
+                <div className="border-t border-purple-300 pt-3 mt-4">
+                  <div><strong>3.1)</strong> Use one of the methods above to open terminal in Downloads</div>
+                  <div><strong>3.2)</strong> Type: <code className="bg-purple-100 px-1 rounded">ls</code> (Mac) or <code className="bg-purple-100 px-1 rounded">dir</code> (Windows) and press Enter</div>
+                  <div><strong>3.3)</strong> Verify you see "piceance_agent_bootstrap.sh" in the list</div>
+                  <div><strong>3.4)</strong> Type: <code className="bg-purple-100 px-1 rounded">chmod +x piceance_agent_bootstrap.sh</code> and press Enter (Mac/Linux only)</div>
+                  <div><strong>3.5)</strong> Right-click in terminal and select "Paste" to paste the command from Step 2</div>
+                  <div><strong>3.6)</strong> Press Enter to start the script</div>
+                  <div><strong>3.7)</strong> Wait 2-15 minutes - you'll see "Building Docker image..." messages</div>
+                  <div><strong>3.8)</strong> When complete, you'll see "✅ Done. Deliverable: ..."</div>
+                  <div><strong>3.9)</strong> The Excel file is ready in the piceance-nowi folder</div>
+                </div>
               </div>
             </div>
 
