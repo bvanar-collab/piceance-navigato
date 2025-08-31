@@ -109,12 +109,34 @@ def run_orders_to_excel(xlsx,county,plss):
     opts=uc.ChromeOptions(); opts.add_argument("--headless=new"); opts.add_argument("--no-sandbox")
     d=uc.Chrome(options=opts)
     try:
-        for tok in plss:
+        print(f"🔍 Processing {len(plss)} PLSS entries...")
+        for i, tok in enumerate(plss):
+            print(f"📍 Processing {i+1}/{len(plss)}: {tok}")
             t,td,r,rd,s=parse_plss(tok)
-            for url in pdf_links_for_plss(d,t,td,r,rd,s):
-                resp=requests.get(url,timeout=30); wi,names=analyze_pdf(resp.content)
-                for nm in names: append_row(xlsx,nm,county,t,td,r,rd,s,wi,url); time.sleep(0.5)
-    finally: d.quit()
+            urls = pdf_links_for_plss(d,t,td,r,rd,s)
+            print(f"   Found {len(urls)} PDF links")
+            
+            if not urls:
+                print(f"   ⚠️  No PDFs found for {tok}")
+                continue
+                
+            for j, url in enumerate(urls):
+                print(f"   📄 Processing PDF {j+1}/{len(urls)}: {url[:60]}...")
+                try:
+                    resp=requests.get(url,timeout=30)
+                    wi,names=analyze_pdf(resp.content)
+                    print(f"      Found {len(names)} owners, WI signal: {wi}")
+                    for nm in names: 
+                        append_row(xlsx,nm,county,t,td,r,rd,s,wi,url)
+                        print(f"      ✅ Added: {nm}")
+                    time.sleep(0.5)
+                except Exception as e:
+                    print(f"      ❌ Error processing {url}: {e}")
+    except Exception as e:
+        print(f"❌ Scraper error: {e}")
+    finally: 
+        d.quit()
+        print("🏁 Scraping completed")
 PY
 
 cat > run_all_selenium.py <<'PY'
