@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
 import { Download, ExternalLink, MapPin, Users, FileText, TrendingUp } from "lucide-react";
+import * as XLSX from 'xlsx';
 
 // Mock data for demo
 const mockOwners = [
@@ -49,6 +50,34 @@ export const Dashboard = () => {
   };
 
   const progress = (stats.completedSections / stats.totalSections) * 100;
+
+  const exportToExcel = () => {
+    // Create workbook with OWNERS sheet
+    const wb = XLSX.utils.book_new();
+    
+    // Prepare data with all required columns
+    const excelData = mockOwners.map(owner => ({
+      'Owner_Name': owner.owner_name,
+      'Canonical_Name': owner.owner_name.replace(/\s+(LLC|INC|LP).*$/i, ''),
+      'Entity_Type': 'LLC',
+      'County': owner.county,
+      'Twp': owner.twp,
+      'Twp_Dir': 'S',
+      'Rng': owner.rng,
+      'Rng_Dir': 'W',
+      'Sec': owner.sec,
+      'DSU_Key': owner.dsu_key,
+      'WI_Signal': owner.wi_signal,
+      'Evidence_Link': owner.evidence_link
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(excelData);
+    XLSX.utils.book_append_sheet(wb, ws, 'OWNERS');
+    
+    // Download file
+    const fileName = `Piceance_NOWI_Analysis_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(wb, fileName);
+  };
 
   return (
     <section className="py-16 px-6 bg-muted/20">
@@ -124,7 +153,7 @@ export const Dashboard = () => {
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               <span>Processing Progress</span>
-              <Button variant="accent" size="sm">
+              <Button variant="accent" size="sm" onClick={exportToExcel}>
                 <Download className="w-4 h-4 mr-2" />
                 Export Excel
               </Button>
