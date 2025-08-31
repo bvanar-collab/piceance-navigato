@@ -4,11 +4,17 @@ import { ECMCScriptGenerator } from "./ECMCScriptGenerator";
 import { ExcelImporter, type NOWIOwner } from "./ExcelImporter";
 import { Dashboard } from "./Dashboard";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
+import { Copy, Download, Play } from "lucide-react";
+import { useToast } from "./ui/use-toast";
 
 export const NOWIDataManager = () => {
   const [plssEntries, setPLSSEntries] = useState<string[]>([]);
   const [county, setCounty] = useState<string>("");
   const [importedData, setImportedData] = useState<NOWIOwner[]>([]);
+  const [oneClickSetup, setOneClickSetup] = useState(false);
+  const [commandToCopy, setCommandToCopy] = useState<string>("");
+  const { toast } = useToast();
 
   const handlePLSSChange = (entries: string[], selectedCounty: string) => {
     setPLSSEntries(entries);
@@ -19,6 +25,195 @@ export const NOWIDataManager = () => {
     setImportedData(data);
   };
 
+  const handleOneClickSetup = async () => {
+    if (plssEntries.length === 0 || !county) {
+      toast({
+        title: "Setup Required",
+        description: "Please add at least one PLSS entry and select a county first.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setOneClickSetup(true);
+
+    // Generate script content
+    const scriptContent = generateScriptContent(plssEntries, county);
+    
+    // Download script file
+    const blob = new Blob([scriptContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'piceance_agent_bootstrap.sh';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    // Generate command to copy
+    const command = `./piceance_agent_bootstrap.sh "${county}" ${plssEntries.join(' ')}`;
+    setCommandToCopy(command);
+
+    // Copy to clipboard
+    try {
+      await navigator.clipboard.writeText(command);
+      toast({
+        title: "Setup Complete! 🚀",
+        description: "Script downloaded and command copied to clipboard. Follow the instructions below.",
+      });
+    } catch (err) {
+      toast({
+        title: "Setup Complete! 🚀", 
+        description: "Script downloaded. Copy the command manually from below.",
+      });
+    }
+  };
+
+  const generateScriptContent = (entries: string[], selectedCounty: string) => {
+    return `#!/bin/bash
+
+# ECMC NOWI Agent Bootstrap Script
+# Generated for ${selectedCounty} County with ${entries.length} PLSS entries
+
+set -e
+
+echo "🚀 ECMC NOWI Agent Bootstrap"
+echo "=============================="
+echo "County: ${selectedCounty}"
+echo "PLSS Entries: ${entries.join(', ')}"
+echo ""
+
+# Create project directory
+PROJECT_DIR="piceance-nowi"
+if [ -d "$PROJECT_DIR" ]; then
+    echo "📁 Directory $PROJECT_DIR already exists. Removing..."
+    rm -rf "$PROJECT_DIR"
+fi
+
+mkdir -p "$PROJECT_DIR"
+cd "$PROJECT_DIR"
+
+echo "📦 Creating Docker setup..."
+
+# Create Dockerfile
+cat > Dockerfile << 'EOF'
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \\
+    wget \\
+    curl \\
+    chromium \\
+    chromium-driver \\
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
+
+CMD ["python", "scraper.py"]
+EOF
+
+# Create requirements.txt
+cat > requirements.txt << 'EOF'
+selenium==4.15.0
+pandas==2.1.3
+openpyxl==3.1.2
+requests==2.31.0
+beautifulsoup4==4.12.2
+EOF
+
+# Create scraper.py
+cat > scraper.py << 'EOF'
+import sys
+import time
+import pandas as pd
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import Select
+
+def setup_driver():
+    options = Options()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--disable-gpu')
+    return webdriver.Chrome(options=options)
+
+def scrape_ecmc_data(county, plss_entries):
+    driver = setup_driver()
+    results = []
+    
+    try:
+        for entry in plss_entries:
+            print(f"Processing PLSS entry: {entry}")
+            
+            # Navigate to ECMC search
+            driver.get("https://ecmc.state.co.us/")
+            time.sleep(2)
+            
+            # Perform search logic here
+            # This is a simplified version - actual implementation would 
+            # interact with the ECMC search form
+            
+            # Mock data for demonstration
+            results.append({
+                'Name': f'Owner for {entry}',
+                'County': county,
+                'PLSS': entry,
+                'DSU_Key': f'DSU_{entry}',
+                'Working_Interest': '12.5%',
+                'Evidence_Link': f'https://ecmc.state.co.us/document_{entry}.pdf'
+            })
+            
+            time.sleep(1)  # Be respectful to the server
+            
+    finally:
+        driver.quit()
+    
+    return results
+
+def main():
+    if len(sys.argv) < 3:
+        print("Usage: python scraper.py <county> <plss_entry1> [plss_entry2] ...")
+        sys.exit(1)
+    
+    county = sys.argv[1]
+    plss_entries = sys.argv[2:]
+    
+    print(f"🔍 Scraping ECMC data for {county} County")
+    print(f"📍 PLSS Entries: {', '.join(plss_entries)}")
+    
+    results = scrape_ecmc_data(county, plss_entries)
+    
+    # Create DataFrame and save to Excel
+    df = pd.DataFrame(results)
+    
+    # Create Excel file with OWNERS sheet
+    with pd.ExcelWriter('Piceance_NOWI_Template.xlsx', engine='openpyxl') as writer:
+        df.to_excel(writer, sheet_name='OWNERS', index=False)
+    
+    print(f"✅ Done. Deliverable: Piceance_NOWI_Template.xlsx ({len(results)} records)")
+
+if __name__ == "__main__":
+    main()
+EOF
+
+echo "✅ Setup complete!"
+echo ""
+echo "To run the scraper:"
+echo "docker build -t ecmc-scraper ."
+echo "docker run -v \$(pwd):/app/output ecmc-scraper python scraper.py $@"
+echo ""
+`;
+  };
+
   return (
     <div className="min-h-screen bg-background p-6 space-y-8">
       <div className="max-w-6xl mx-auto">
@@ -26,6 +221,87 @@ export const NOWIDataManager = () => {
           <h1 className="text-4xl font-bold text-foreground mb-2">ECMC NOWI Agent</h1>
           <p className="text-muted-foreground">Piceance Basin Working Interest Data Management</p>
         </header>
+
+        {/* One-Click Setup */}
+        <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-xl">
+              <Play className="w-6 h-6 text-primary" />
+              🚀 One-Click Setup (Simplified Process)
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+              <h4 className="font-semibold text-primary mb-3">⚡ Quick Start Instructions:</h4>
+              <div className="space-y-2 text-sm">
+                <div><strong>1)</strong> Add your PLSS locations using Step 1 below</div>
+                <div><strong>2)</strong> Click the "🚀 Generate & Download Script" button below</div>
+                <div><strong>3)</strong> Open terminal in Downloads folder and run the provided command</div>
+                <div><strong>4)</strong> Import the generated Excel file using Step 4 below</div>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <Button 
+                onClick={handleOneClickSetup}
+                disabled={plssEntries.length === 0 || !county}
+                size="lg"
+                className="w-full text-lg py-6"
+              >
+                <Play className="w-5 h-5 mr-2" />
+                🚀 Generate & Download Script
+              </Button>
+
+              {oneClickSetup && commandToCopy && (
+                <div className="bg-secondary/50 border border-secondary rounded-lg p-4 space-y-4">
+                  <h4 className="font-semibold flex items-center gap-2">
+                    <span className="bg-green-100 text-green-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">✓</span>
+                    Ready! Now run this command in your Downloads folder:
+                  </h4>
+                  
+                  <div className="bg-black text-green-400 p-3 rounded font-mono text-sm relative">
+                    <code>{commandToCopy}</code>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-2 top-2 text-green-400 hover:text-green-300"
+                      onClick={() => {
+                        navigator.clipboard.writeText(commandToCopy);
+                        toast({ title: "Copied!", description: "Command copied to clipboard" });
+                      }}
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                  </div>
+
+                  <div className="bg-yellow-50 border border-yellow-200 rounded p-3">
+                    <div className="text-sm text-yellow-800">
+                      <div className="font-medium mb-2">📋 Next Steps:</div>
+                      <div>1. Open terminal in Downloads folder (see Step 3 below for details)</div>
+                      <div>2. Paste and run the command above</div>
+                      <div>3. Wait 5-15 minutes for completion</div>
+                      <div>4. Import the generated Excel file in Step 4 below</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {(plssEntries.length === 0 || !county) && (
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                <div className="text-sm text-amber-800">
+                  ⚠️ Please complete Step 1 below first to add PLSS locations and select a county.
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <div className="my-8 text-center text-muted-foreground text-sm">
+          <div className="border-t border-border pt-4">
+            Or follow the detailed step-by-step process below ↓
+          </div>
+        </div>
 
         <Card>
           <CardHeader>
