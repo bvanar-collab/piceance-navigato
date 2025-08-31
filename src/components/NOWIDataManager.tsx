@@ -332,13 +332,23 @@ echo ""
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="text-blue-800 space-y-2 text-sm">
-                <div><strong>→</strong> Select county (Garfield or Rio Blanco)</div>
-                <div><strong>→</strong> Enter Township (number + N/S direction)</div>
-                <div><strong>→</strong> Enter Range (number + E/W direction)</div>
-                <div><strong>→</strong> Enter Section (1-36)</div>
-                <div><strong>→</strong> Click "Add PLSS Entry" to save</div>
-                <div><strong>→</strong> Repeat for additional locations</div>
+              <div className="text-blue-800 space-y-3 text-sm">
+                <div><strong>🚀 FASTEST OPTION - Use Preset:</strong></div>
+                <div className="pl-4 bg-blue-100 rounded p-3">
+                  <div><strong>→</strong> Click "Load Piceance Preset" button (loads entire Piceance Basin)</div>
+                  <div><strong>→</strong> Automatically adds 175 locations covering Townships 5S–9S, Ranges 94W–98W</div>
+                  <div><strong>→</strong> Sets county to Garfield and you're done with Step 1!</div>
+                </div>
+                
+                <div><strong>📝 MANUAL OPTION - Add Individual Locations:</strong></div>
+                <div className="pl-4 space-y-1">
+                  <div><strong>→</strong> Select county (Garfield or Rio Blanco)</div>
+                  <div><strong>→</strong> Enter Township (number only, like "6")</div>
+                  <div><strong>→</strong> Enter Range (number only, like "95")</div>
+                  <div><strong>→</strong> Enter Section (1-36)</div>
+                  <div><strong>→</strong> Click "Add PLSS Entry" to save</div>
+                  <div><strong>→</strong> Repeat for additional locations</div>
+                </div>
               </div>
             </div>
             <PLSSForm onPLSSChange={handlePLSSChange} />
