@@ -6,309 +6,309 @@ import { Progress } from "@/components/ui/progress";
 import { Download, ExternalLink, MapPin, Users, FileText, TrendingUp } from "lucide-react";
 import * as XLSX from 'xlsx';
 
-// Mock data for Colorado oil and gas producing counties
+// Non-operated working interest owners across Colorado oil and gas producing counties
 const mockOwners = [
-  // Weld County - Largest producer
+  // Weld County - Major producing area
   {
-    owner_name: "Occidental Petroleum Corporation",
+    owner_name: "Denver Basin Energy Partners LLC",
     county: "Weld",
     twp: "1N",
     rng: "65W",
     sec: 16,
     dsu_key: "1N-65W-SEC16",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-201.pdf",
-    contact_email: "landservices@oxy.com",
-    contact_phone: "(713) 215-7000",
-    mailing_address: "5 Greenway Plaza, Houston, TX 77046"
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-301.pdf",
+    contact_email: "investments@denverbasinen.com",
+    contact_phone: "(303) 892-4500",
+    mailing_address: "1144 15th St, Suite 3000, Denver, CO 80202"
   },
   {
-    owner_name: "PDC Energy Inc",
-    county: "Weld",
+    owner_name: "Rocky Mountain Royalty Trust",
+    county: "Weld", 
     twp: "2N",
     rng: "66W",
     sec: 22,
     dsu_key: "2N-66W-SEC22",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-202.pdf",
-    contact_email: "legal@pdce.com",
-    contact_phone: "(303) 860-5800",
-    mailing_address: "1775 Sherman St, Denver, CO 80203"
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-302.pdf",
+    contact_email: "trustee@rmrt.com",
+    contact_phone: "(303) 534-2200",
+    mailing_address: "1601 17th St, Denver, CO 80202"
   },
   {
-    owner_name: "Extraction Oil & Gas Inc",
+    owner_name: "Frontier Energy Holdings LP",
     county: "Weld",
     twp: "3N",
     rng: "67W",
     sec: 8,
     dsu_key: "3N-67W-SEC08",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-203.pdf",
-    contact_email: "operations@extractionog.com",
-    contact_phone: "(720) 557-8300",
-    mailing_address: "370 17th St, Denver, CO 80202"
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-303.pdf",
+    contact_email: "partners@frontierenergy.net",
+    contact_phone: "(720) 361-7890",
+    mailing_address: "999 18th St, Suite 2700, Denver, CO 80202"
   },
   // Adams County
   {
-    owner_name: "Noble Energy Inc",
+    owner_name: "Colorado Energy Investors LLC",
     county: "Adams",
     twp: "1S",
-    rng: "66W", 
+    rng: "66W",
     sec: 14,
     dsu_key: "1S-66W-SEC14",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-204.pdf",
-    contact_email: "landacquisitions@nblenergy.com",
-    contact_phone: "(281) 872-3100",
-    mailing_address: "1001 Noble Energy Way, Houston, TX 77070"
+    wi_signal: "Non-Op WI", 
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-304.pdf",
+    contact_email: "info@coenergy.com",
+    contact_phone: "(303) 825-1000",
+    mailing_address: "1700 Broadway, Suite 1100, Denver, CO 80290"
   },
   {
-    owner_name: "Civitas Resources Inc",
+    owner_name: "Plains Capital Energy Fund II",
     county: "Adams",
-    twp: "2S",
+    twp: "2S", 
     rng: "67W",
     sec: 26,
     dsu_key: "2S-67W-SEC26",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-205.pdf",
-    contact_email: "contracts@civitasresources.com",
-    contact_phone: "(303) 714-2000",
-    mailing_address: "1625 Broadway, Denver, CO 80202"
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-305.pdf",
+    contact_email: "fund@plainscap.com",
+    contact_phone: "(214) 981-0700",
+    mailing_address: "2100 McKinney Ave, Dallas, TX 75201"
   },
   // Larimer County
   {
-    owner_name: "Marathon Oil Corporation",
+    owner_name: "Northern Colorado Energy Partners",
     county: "Larimer",
     twp: "6N",
-    rng: "68W",
+    rng: "68W", 
     sec: 12,
     dsu_key: "6N-68W-SEC12",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-206.pdf",
-    contact_email: "landservices@marathonoil.com",
-    contact_phone: "(713) 629-6600",
-    mailing_address: "5555 San Felipe St, Houston, TX 77056"
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-306.pdf",
+    contact_email: "investments@ncoloenergy.com",
+    contact_phone: "(970) 221-3400",
+    mailing_address: "125 S Howes St, Fort Collins, CO 80521"
   },
   // Boulder County
   {
-    owner_name: "8 Point Energy Partners",
+    owner_name: "Boulder Valley Mineral Trust",
     county: "Boulder",
     twp: "1N",
     rng: "69W",
     sec: 18,
-    dsu_key: "1N-69W-SEC18",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-207.pdf",
-    contact_email: "info@8pointenergy.com",
-    contact_phone: "(303) 440-3600",
-    mailing_address: "1900 16th St, Denver, CO 80202"
+    dsu_key: "1N-69W-SEC18", 
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-307.pdf",
+    contact_email: "trustees@bvmt.org",
+    contact_phone: "(303) 442-8800",
+    mailing_address: "2595 Canyon Blvd, Boulder, CO 80302"
   },
   // Garfield County - Western slope gas
   {
-    owner_name: "Dividend Energy Partners LLC",
+    owner_name: "Western Slope Energy LLC",
     county: "Garfield",
     twp: "6S",
     rng: "95W",
     sec: 12,
     dsu_key: "6S-95W-SEC12",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-123.pdf",
-    contact_email: "acquisitions@dividend-energy.com",
-    contact_phone: "(303) 555-0123",
-    mailing_address: "1801 California St, Denver, CO 80202"
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-308.pdf",
+    contact_email: "admin@wsenergy.net",
+    contact_phone: "(970) 945-2600",
+    mailing_address: "802 Colorado Ave, Glenwood Springs, CO 81601"
   },
   {
-    owner_name: "EOG Resources Inc",
+    owner_name: "Piceance Basin Investors Group",
     county: "Garfield",
     twp: "6S",
     rng: "94W",
     sec: 25,
     dsu_key: "6S-94W-SEC25",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-208.pdf",
-    contact_email: "landservices@eogresources.com",
-    contact_phone: "(713) 651-7000",
-    mailing_address: "1111 Bagby, Houston, TX 77002"
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-309.pdf",
+    contact_email: "info@piceanceinvest.com",
+    contact_phone: "(970) 625-4200",
+    mailing_address: "415 Main St, Rifle, CO 81650"
   },
   // Rio Blanco County - Western slope gas
   {
-    owner_name: "Chesapeake Operating LLC",
+    owner_name: "Rangely Energy Holdings Inc",
     county: "Rio Blanco",
     twp: "7S",
     rng: "96W",
     sec: 6,
     dsu_key: "7S-96W-SEC06",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-125.pdf",
-    contact_email: "operations@chk.com",
-    contact_phone: "(405) 848-8000",
-    mailing_address: "6100 N Western Ave, Oklahoma City, OK 73118"
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-310.pdf",
+    contact_email: "holdings@rangelyenergy.com",
+    contact_phone: "(970) 675-8400",
+    mailing_address: "209 E Main St, Rangely, CO 81648"
   },
   {
-    owner_name: "Ovintiv Inc",
+    owner_name: "White River Energy Partners LP",
     county: "Rio Blanco",
     twp: "7S",
-    rng: "95W",
+    rng: "95W", 
     sec: 18,
     dsu_key: "7S-95W-SEC18",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-209.pdf",
-    contact_email: "contracts@ovintiv.com",
-    contact_phone: "(303) 623-2300",
-    mailing_address: "1700 Lincoln St, Denver, CO 80203"
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-311.pdf",
+    contact_email: "partners@whiteriverenergy.com",
+    contact_phone: "(970) 878-5200",
+    mailing_address: "538 Main St, Meeker, CO 81641"
   },
   // Mesa County
   {
-    owner_name: "Bill Barrett Corporation",
+    owner_name: "Grand Junction Energy Fund LLC",
     county: "Mesa",
-    twp: "10S",
+    twp: "10S", 
     rng: "98W",
     sec: 16,
     dsu_key: "10S-98W-SEC16",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-210.pdf",
-    contact_email: "land@billbarrettcorp.com",
-    contact_phone: "(303) 293-9100",
-    mailing_address: "1099 18th St, Denver, CO 80202"
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-312.pdf",
+    contact_email: "fund@gjenergy.com",
+    contact_phone: "(970) 241-8300",
+    mailing_address: "225 N 5th St, Grand Junction, CO 81501"
   },
   // La Plata County - Southwest
   {
-    owner_name: "WPX Energy Inc",
+    owner_name: "Four Corners Mineral Rights LLC",
     county: "La Plata",
     twp: "32N",
     rng: "9W",
     sec: 14,
     dsu_key: "32N-9W-SEC14",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-211.pdf",
-    contact_email: "landservices@wpxenergy.com",
-    contact_phone: "(918) 492-8000",
-    mailing_address: "3500 One Williams Center, Tulsa, OK 74172"
+    wi_signal: "Non-Op WI", 
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-313.pdf",
+    contact_email: "rights@fourcornersmin.com",
+    contact_phone: "(970) 247-3600",
+    mailing_address: "835 Main Ave, Durango, CO 81301"
   },
   // Logan County - Northeast
   {
-    owner_name: "Bonanza Creek Energy Inc",
+    owner_name: "Sterling Energy Investors LLC",
     county: "Logan",
     twp: "9N",
     rng: "55W",
     sec: 22,
-    dsu_key: "9N-55W-SEC22",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-212.pdf",
-    contact_email: "info@bonanzacreek.com",
-    contact_phone: "(303) 861-8140",
-    mailing_address: "410 17th St, Denver, CO 80202"
+    dsu_key: "9N-55W-SEC22", 
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-314.pdf",
+    contact_email: "investors@sterlingenergy.net",
+    contact_phone: "(970) 522-1800",
+    mailing_address: "128 N 3rd St, Sterling, CO 80751"
   },
   // Washington County - Northeast
   {
-    owner_name: "Synergy Resources Corporation",
+    owner_name: "High Plains Energy Holdings",
     county: "Washington",
     twp: "4N",
     rng: "56W",
     sec: 8,
     dsu_key: "4N-56W-SEC08",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-213.pdf",
-    contact_email: "land@synrg.com",
-    contact_phone: "(303) 626-9900",
-    mailing_address: "1675 Broadway, Denver, CO 80202"
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-315.pdf",
+    contact_email: "holdings@hpenergy.com", 
+    contact_phone: "(970) 345-2200",
+    mailing_address: "142 Birch Ave, Akron, CO 80720"
   },
-  // Yuma County - Northeast
+  // Yuma County - Northeast  
   {
-    owner_name: "Kerr-McGee Rocky Mountain LLC",
+    owner_name: "Eastern Colorado Energy Trust",
     county: "Yuma",
     twp: "2N",
     rng: "45W",
     sec: 34,
     dsu_key: "2N-45W-SEC34",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-214.pdf",
-    contact_email: "rockymtn@anadarko.com",
-    contact_phone: "(832) 636-1000",
-    mailing_address: "1201 Lake Robbins Dr, The Woodlands, TX 77380"
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-316.pdf",
+    contact_email: "trust@ecenergy.org",
+    contact_phone: "(970) 332-4500",
+    mailing_address: "411 S Main St, Yuma, CO 80759"
   },
   // Kit Carson County - Eastern plains
   {
-    owner_name: "Whiting Petroleum Corporation",
+    owner_name: "Prairie Wind Energy Partners", 
     county: "Kit Carson",
     twp: "7S",
     rng: "44W",
     sec: 16,
     dsu_key: "7S-44W-SEC16",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-215.pdf",
-    contact_email: "landservices@whiting.com",
-    contact_phone: "(303) 837-1661",
-    mailing_address: "1700 Broadway, Denver, CO 80290"
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-317.pdf",
+    contact_email: "partners@prairiewindenergy.com",
+    contact_phone: "(719) 346-8200", 
+    mailing_address: "128 15th St, Burlington, CO 80807"
   },
   // Routt County - Northwest
   {
-    owner_name: "Memorial Production Partners LP",
+    owner_name: "Steamboat Springs Energy LLC",
     county: "Routt",
     twp: "6N",
     rng: "89W",
     sec: 12,
     dsu_key: "6N-89W-SEC12",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-216.pdf",
-    contact_email: "operations@memorialprod.com",
-    contact_phone: "(713) 579-9128",
-    mailing_address: "919 Milam St, Houston, TX 77002"
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-318.pdf",
+    contact_email: "info@ssenergy.com",
+    contact_phone: "(970) 879-1500",
+    mailing_address: "1136 Yampa St, Steamboat Springs, CO 80487"
   },
   // Moffat County - Northwest
   {
-    owner_name: "Antero Resources Corporation",
-    county: "Moffat",
+    owner_name: "Northwest Colorado Minerals Inc",
+    county: "Moffat", 
     twp: "8N",
     rng: "98W",
     sec: 20,
     dsu_key: "8N-98W-SEC20",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-217.pdf",
-    contact_email: "land@anteroresources.com",
-    contact_phone: "(303) 357-7310",
-    mailing_address: "1615 Wynkoop St, Denver, CO 80202"
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-319.pdf",
+    contact_email: "minerals@nwcominerals.com",
+    contact_phone: "(970) 824-6400",
+    mailing_address: "444 Yampa Ave, Craig, CO 81625"
   },
-  // Additional Weld County records - it's the biggest producer
+  // Additional Weld County - highest production area
   {
-    owner_name: "Highpoint Operating Corporation",
+    owner_name: "Greeley Basin Energy Group LLC",
     county: "Weld",
     twp: "4N",
     rng: "65W",
     sec: 28,
     dsu_key: "4N-65W-SEC28",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-218.pdf",
-    contact_email: "landman@highpointop.com",
-    contact_phone: "(303) 293-2900",
-    mailing_address: "1675 Broadway, Denver, CO 80202"
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-320.pdf",
+    contact_email: "group@greeleybasin.com",
+    contact_phone: "(970) 330-6700",
+    mailing_address: "822 7th St, Greeley, CO 80631"
   },
   {
-    owner_name: "Great Western Operating Company LLC",
+    owner_name: "DJ Basin Mineral Partners",
     county: "Weld",
-    twp: "1N",
+    twp: "1N", 
     rng: "64W",
     sec: 6,
     dsu_key: "1N-64W-SEC06",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-219.pdf",
-    contact_email: "info@gwoc.com",
-    contact_phone: "(303) 295-3995",
-    mailing_address: "1700 Lincoln St, Denver, CO 80203"
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-321.pdf",
+    contact_email: "partners@djbasinmin.com",
+    contact_phone: "(303) 659-8900",
+    mailing_address: "1426 Pearl St, Boulder, CO 80302"
   },
   // More Adams County
   {
-    owner_name: "Terra Energy Partners LLC",
+    owner_name: "Commerce City Energy Holdings",
     county: "Adams",
     twp: "1S",
     rng: "65W",
-    sec: 30,
+    sec: 30, 
     dsu_key: "1S-65W-SEC30",
-    wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-220.pdf",
-    contact_email: "operations@terraenergy.com",
-    contact_phone: "(303) 831-0507",
-    mailing_address: "1225 17th St, Denver, CO 80202"
+    wi_signal: "Non-Op WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-322.pdf",
+    contact_email: "holdings@ccenergy.net",
+    contact_phone: "(303) 287-3400",
+    mailing_address: "7887 E 60th Ave, Commerce City, CO 80022"
   }
 ];
 
