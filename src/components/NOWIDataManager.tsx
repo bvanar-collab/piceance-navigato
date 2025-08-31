@@ -404,12 +404,23 @@ echo ""
                 </div>
                 
                 <div className="border-t border-purple-300 pt-3">
-                  <div><strong>💻 Execute Commands:</strong></div>
+                  <div><strong>💻 Complete Terminal Steps (after pressing Download button):</strong></div>
                   <div className="pl-4 space-y-1">
-                    <div>1. Make script executable: <code className="bg-purple-100 px-1 rounded">chmod +x piceance_agent_bootstrap.sh</code> (Mac/Linux)</div>
-                    <div>2. Paste and run the command from Step 2</div>
-                    <div>3. Wait 5-15 minutes for completion - this will generate <strong>Piceance_NOWI_Template.xlsx</strong></div>
-                    <div>4. Look for "✅ Done" message with Excel file location in piceance-nowi folder</div>
+                    <div><strong>Step A:</strong> After clicking Download button above, you'll have:</div>
+                    <div className="pl-4 text-xs">• Script file: <code className="bg-purple-100 px-1 rounded">piceance_agent_bootstrap.sh</code> in Downloads</div>
+                    <div className="pl-4 text-xs">• Command automatically copied to clipboard</div>
+                    
+                    <div><strong>Step B:</strong> In your Downloads terminal, make script executable:</div>
+                    <div className="pl-4 text-xs"><code className="bg-purple-100 px-1 rounded">chmod +x piceance_agent_bootstrap.sh</code> (Mac/Linux only)</div>
+                    
+                    <div><strong>Step C:</strong> Paste and run the copied command:</div>
+                    <div className="pl-4 text-xs">Right-click → Paste, then press Enter</div>
+                    
+                    <div><strong>Step D:</strong> Wait 5-15 minutes - script will:</div>
+                    <div className="pl-4 text-xs">• Create "piceance-nowi" folder • Generate <strong>Piceance_NOWI_Template.xlsx</strong></div>
+                    
+                    <div><strong>Step E:</strong> Look for completion message:</div>
+                    <div className="pl-4 text-xs">"✅ Done. Deliverable: Piceance_NOWI_Template.xlsx"</div>
                   </div>
                 </div>
               </div>
