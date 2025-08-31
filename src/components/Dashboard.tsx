@@ -47,6 +47,97 @@ const mockOwners = [
     contact_phone: "(405) 848-8000",
     mailing_address: "6100 N Western Ave, Oklahoma City, OK 73118"
   },
+  {
+    owner_name: "EOG Resources Inc",
+    county: "Garfield",
+    twp: "6S",
+    rng: "94W",
+    sec: 25,
+    dsu_key: "6S-94W-SEC25",
+    wi_signal: "Order-WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-126.pdf",
+    contact_email: "landservices@eogresources.com",
+    contact_phone: "(713) 651-7000",
+    mailing_address: "1111 Bagby, Houston, TX 77002"
+  },
+  {
+    owner_name: "Ovintiv Inc",
+    county: "Rio Blanco",
+    twp: "7S",
+    rng: "95W",
+    sec: 18,
+    dsu_key: "7S-95W-SEC18",
+    wi_signal: "Order-WI", 
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-127.pdf",
+    contact_email: "contracts@ovintiv.com",
+    contact_phone: "(303) 623-2300",
+    mailing_address: "1700 Lincoln St, Denver, CO 80203"
+  },
+  {
+    owner_name: "Devon Energy Corporation",
+    county: "Garfield",
+    twp: "5S",
+    rng: "95W", 
+    sec: 35,
+    dsu_key: "5S-95W-SEC35",
+    wi_signal: "Order-WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-128.pdf",
+    contact_email: "land@dvn.com",
+    contact_phone: "(405) 235-3611",
+    mailing_address: "333 W Sheridan Ave, Oklahoma City, OK 73102"
+  },
+  {
+    owner_name: "ConocoPhillips Company",
+    county: "Rio Blanco",
+    twp: "8S",
+    rng: "96W",
+    sec: 14,
+    dsu_key: "8S-96W-SEC14", 
+    wi_signal: "Order-WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-129.pdf",
+    contact_email: "landacquisitions@conocophillips.com",
+    contact_phone: "(281) 293-1000",
+    mailing_address: "925 N Eldridge Pkwy, Houston, TX 77079"
+  },
+  {
+    owner_name: "PDC Energy Inc",
+    county: "Garfield",
+    twp: "6S", 
+    rng: "96W",
+    sec: 8,
+    dsu_key: "6S-96W-SEC08",
+    wi_signal: "Order-WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-130.pdf",
+    contact_email: "legal@pdce.com",
+    contact_phone: "(303) 860-5800",
+    mailing_address: "1775 Sherman St, Denver, CO 80203"
+  },
+  {
+    owner_name: "Extraction Oil & Gas Inc",
+    county: "Rio Blanco",
+    twp: "7S",
+    rng: "97W",
+    sec: 22,
+    dsu_key: "7S-97W-SEC22",
+    wi_signal: "Order-WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-131.pdf", 
+    contact_email: "operations@extractionog.com",
+    contact_phone: "(720) 557-8300",
+    mailing_address: "370 17th St, Denver, CO 80202"
+  },
+  {
+    owner_name: "Alta Mesa Holdings LP",
+    county: "Garfield",
+    twp: "5S",
+    rng: "94W",
+    sec: 16,
+    dsu_key: "5S-94W-SEC16",
+    wi_signal: "Order-WI",
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-132.pdf",
+    contact_email: "info@altamesa.com", 
+    contact_phone: "(405) 209-0860",
+    mailing_address: "15 E 5th St, Tulsa, OK 74103"
+  },
 ];
 
 export const Dashboard = () => {
