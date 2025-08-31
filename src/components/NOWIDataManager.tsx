@@ -408,8 +408,8 @@ echo ""
                   <div className="pl-4 space-y-1">
                     <div>1. Make script executable: <code className="bg-purple-100 px-1 rounded">chmod +x piceance_agent_bootstrap.sh</code> (Mac/Linux)</div>
                     <div>2. Paste and run the command from Step 2</div>
-                    <div>3. Wait 5-15 minutes for completion</div>
-                    <div>4. Look for "✅ Done" message with Excel file location</div>
+                    <div>3. Wait 5-15 minutes for completion - this will generate <strong>Piceance_NOWI_Template.xlsx</strong></div>
+                    <div>4. Look for "✅ Done" message with Excel file location in piceance-nowi folder</div>
                   </div>
                 </div>
               </div>
