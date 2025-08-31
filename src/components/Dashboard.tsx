@@ -145,7 +145,7 @@ export const Dashboard = () => {
     totalOwners: 247,
     validWorkingInterest: 189,
     exclusions: 58,
-    completedSections: 142,
+    completedSections: 175,
     totalSections: 175
   };
 
