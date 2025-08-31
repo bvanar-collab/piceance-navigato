@@ -141,16 +141,19 @@ PY
 
 cat > run_all_selenium.py <<'PY'
 import argparse,subprocess,shlex,time
-def sh(cmd): print("→",cmd); subprocess.run(shlex.split(cmd),check=True)
+def sh(cmd): print("→",cmd); subprocess.run(shlex.split(cmd),check=True,stdout=None,stderr=None)
 def main():
     p=argparse.ArgumentParser(); p.add_argument("--xlsx",required=True); p.add_argument("--plss",required=True); p.add_argument("--county",default="Garfield")
     a=p.parse_args()
     sh("python generate_piceance_nowis_template.py")
     tokens=[x.strip() for x in a.plss.split(",") if x.strip()]
+    print(f"🚀 Starting scraper for {len(tokens)} PLSS entries in batches of 10")
     for i in range(0,len(tokens),10):
         batch=",".join(tokens[i:i+10])
+        print(f"📦 Processing batch {i//10+1}/{(len(tokens)+9)//10}: {len(batch.split(','))} entries")
         sh(f"python ecmc_orders_selenium.py --xlsx {a.xlsx} --county {a.county} --plss '{batch}'")
         time.sleep(2)
+    print("🎉 All batches completed!")
 if __name__=="__main__": main()
 PY
 
