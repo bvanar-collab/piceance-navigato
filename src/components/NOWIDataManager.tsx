@@ -73,15 +73,45 @@ export const NOWIDataManager = () => {
   const generateScriptContent = (entries: string[], selectedCounty: string) => {
     return `#!/bin/bash
 
-# ECMC NOWI Agent Bootstrap Script
+# ECMC NOWI Agent Bootstrap Script  
 # Generated for ${selectedCounty} County with ${entries.length} PLSS entries
 
 set -e
 
+# Parse command line arguments
+PRESET=""
+PLSS=""
+COUNTY="${selectedCounty}"
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --preset)
+      PRESET="$2"
+      shift 2
+      ;;
+    --plss)
+      PLSS="$2"
+      shift 2
+      ;;
+    --county)
+      COUNTY="$2"
+      shift 2
+      ;;
+    *)
+      echo "Unknown option: $1"
+      exit 1
+      ;;
+  esac
+done
+
 echo "🚀 ECMC NOWI Agent Bootstrap"
 echo "=============================="
-echo "County: ${selectedCounty}"
-echo "PLSS Entries: ${entries.join(', ')}"
+echo "County: $COUNTY"
+if [[ -n "$PRESET" ]]; then
+  echo "Preset: $PRESET"
+else
+  echo "PLSS Entries: $PLSS"
+fi
 echo ""
 
 # Create project directory
@@ -219,12 +249,58 @@ if __name__ == "__main__":
     main()
 EOF
 
+# Create make_presets.py for preset functionality
+cat > make_presets.py << 'EOF'
+def token(t,td,r,rd,s): return f"{t}{td}-{r}{rd}-{s}"
+def grid(t1,t2,r1,r2,secs=(1,6,12,18,24,30,36),td="S",rd="W"):
+    out=[]
+    for t in range(t1,t2+1):
+        for r in range(r1,r2+1):
+            for s in secs: out.append(token(t,td,r,rd,s))
+    return out
+def piceance_preset():
+    seen=set(); out=[]
+    for tok in grid(5,9,94,98): 
+        if tok not in seen: seen.add(tok); out.append(tok)
+    return out
+if __name__=="__main__": print(",".join(piceance_preset()))
+EOF
+
 echo "✅ Setup complete!"
 echo ""
-echo "Now running the scraper automatically..."
+echo "🏗️  Building Docker image..."
 docker build -t ecmc-scraper .
-docker run -v "\$(pwd):/app/output" ecmc-scraper python scraper.py "\$@"
+
+echo "📊 Creating Excel template..."
+docker run --rm -v "\$(pwd)":/app/output ecmc-scraper python -c "
+import pandas as pd
+
+# Create empty Excel file with correct columns
+columns = ['Owner_Name', 'Canonical_Name', 'Entity_Type', 'County', 'Twp', 'Twp_Dir', 'Rng', 'Rng_Dir', 'Sec', 'DSU_Key', 'WI_Signal', 'Evidence_Link']
+df = pd.DataFrame(columns=columns)
+with pd.ExcelWriter('/app/output/Piceance_NOWI_Template.xlsx', engine='openpyxl') as writer:
+    df.to_excel(writer, sheet_name='OWNERS', index=False)
+print('Template created successfully')
+"
+
+# Handle preset or custom PLSS entries
+if [[ "\$PRESET" == "piceance" ]]; then
+  echo "🎯 Using Piceance Basin preset..."
+  PLSS_BATCH=\$(docker run --rm -v "\$(pwd)":/app/output ecmc-scraper python make_presets.py)
+  COUNTY="Garfield"
+elif [[ -n "\$PLSS" ]]; then
+  echo "📍 Using custom PLSS entries..."
+  PLSS_BATCH="\$PLSS"
+else
+  echo "❌ ERROR: Please provide either --preset piceance or --plss 'entries'"
+  exit 1
+fi
+
+echo "🔍 Running scraper with PLSS entries..."
+docker run --rm -v "\$(pwd)":/app/output ecmc-scraper python scraper.py "\$COUNTY" \$PLSS_BATCH
+
 echo ""
+echo "✅ Done! Excel file created: Piceance_NOWI_Template.xlsx"
 `;
   };
 
