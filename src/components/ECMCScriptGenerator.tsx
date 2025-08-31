@@ -44,7 +44,20 @@ REQ
 cat > Dockerfile <<'DOCKER'
 FROM python:3.11-slim
 WORKDIR /app
-RUN apt-get update && apt-get install -y --no-install-recommends fonts-dejavu-core && rm -rf /var/lib/apt/lists/*
+
+# Install Chrome and dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \\
+    fonts-dejavu-core \\
+    wget \\
+    curl \\
+    gnupg \\
+    unzip \\
+    && wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \\
+    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' \\
+    && apt-get update \\
+    && apt-get install -y google-chrome-stable \\
+    && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 COPY . /app
@@ -118,7 +131,16 @@ def pdf_links_for_plss(driver,t,td,r,rd,s):
     return list({a.get_attribute("href") for a in links if a.get_attribute("href")})
     
 def run_orders_to_excel(xlsx,county,plss):
-    opts=uc.ChromeOptions(); opts.add_argument("--headless=new"); opts.add_argument("--no-sandbox")
+    opts=uc.ChromeOptions()
+    opts.add_argument("--headless=new")
+    opts.add_argument("--no-sandbox")
+    opts.add_argument("--disable-dev-shm-usage") 
+    opts.add_argument("--disable-gpu")
+    opts.add_argument("--disable-extensions")
+    opts.add_argument("--disable-plugins")
+    opts.add_argument("--remote-debugging-port=9222")
+    opts.binary_location = "/usr/bin/google-chrome-stable"
+    
     d=uc.Chrome(options=opts)
     total_added = 0
     try:
