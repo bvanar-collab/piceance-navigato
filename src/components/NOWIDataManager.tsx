@@ -385,10 +385,22 @@ echo ""
             <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
               <div className="text-purple-800 space-y-3 text-sm">
                 <div><strong>📁 Open Terminal in Downloads:</strong></div>
-                <div className="pl-4 space-y-1">
-                  <div><strong>Mac:</strong> Right-click Downloads folder → "New Terminal at Folder"</div>
-                  <div><strong>Windows:</strong> Shift + Right-click Downloads → "Open PowerShell here"</div>
-                  <div><strong>Alternative:</strong> Open terminal → type <code className="bg-purple-100 px-1 rounded">cd Downloads</code></div>
+                <div className="pl-4 space-y-2">
+                  <div><strong>🍎 Mac Options:</strong></div>
+                  <div className="pl-4 space-y-1 text-xs">
+                    <div>• Option 1: Right-click Downloads folder → "New Terminal at Folder" (if available)</div>
+                    <div>• Option 2: Open Finder → Go to Downloads → Right-click empty space → "Services" → "New Terminal at Folder"</div>
+                    <div>• Option 3: Open Terminal app → type <code className="bg-purple-100 px-1 rounded">cd ~/Downloads</code></div>
+                  </div>
+                  
+                  <div><strong>🪟 Windows Options:</strong></div>
+                  <div className="pl-4 space-y-1 text-xs">
+                    <div>• Option 1: Shift + Right-click Downloads folder → "Open PowerShell here"</div>
+                    <div>• Option 2: In File Explorer address bar, type <code className="bg-purple-100 px-1 rounded">cmd</code> and press Enter</div>
+                    <div>• Option 3: Open Command Prompt → type <code className="bg-purple-100 px-1 rounded">cd Downloads</code></div>
+                  </div>
+                  
+                  <div><strong>🐧 Linux:</strong> Right-click Downloads → "Open in Terminal" or use <code className="bg-purple-100 px-1 rounded">cd ~/Downloads</code></div>
                 </div>
                 
                 <div className="border-t border-purple-300 pt-3">
