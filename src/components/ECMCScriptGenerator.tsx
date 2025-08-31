@@ -110,35 +110,60 @@ def pdf_links_for_plss(driver,t,td,r,rd,s):
 def run_orders_to_excel(xlsx,county,plss):
     opts=uc.ChromeOptions(); opts.add_argument("--headless=new"); opts.add_argument("--no-sandbox")
     d=uc.Chrome(options=opts)
+    total_added = 0
     try:
         print(f"🔍 Processing {len(plss)} PLSS entries...")
         for i, tok in enumerate(plss):
             print(f"📍 Processing {i+1}/{len(plss)}: {tok}")
-            t,td,r,rd,s=parse_plss(tok)
-            urls = pdf_links_for_plss(d,t,td,r,rd,s)
-            print(f"   Found {len(urls)} PDF links")
-            
-            if not urls:
-                print(f"   ⚠️  No PDFs found for {tok}")
-                continue
+            try:
+                t,td,r,rd,s=parse_plss(tok)
+                urls = pdf_links_for_plss(d,t,td,r,rd,s)
+                print(f"   Found {len(urls)} PDF links")
                 
-            for j, url in enumerate(urls):
-                print(f"   📄 Processing PDF {j+1}/{len(urls)}: {url[:60]}...")
-                try:
-                    resp=requests.get(url,timeout=30)
-                    wi,names=analyze_pdf(resp.content)
-                    print(f"      Found {len(names)} owners, WI signal: {wi}")
-                    for nm in names: 
-                        append_row(xlsx,nm,county,t,td,r,rd,s,wi,url)
-                        print(f"      ✅ Added: {nm}")
-                    time.sleep(0.5)
-                except Exception as e:
-                    print(f"      ❌ Error processing {url}: {e}")
+                if not urls:
+                    print(f"   ⚠️  No PDFs found for {tok}")
+                    continue
+                    
+                for j, url in enumerate(urls):
+                    print(f"   📄 Processing PDF {j+1}/{len(urls)}: {url[:60]}...")
+                    try:
+                        resp=requests.get(url,timeout=30)
+                        wi,names=analyze_pdf(resp.content)
+                        print(f"      Found {len(names)} owners, WI signal: {wi}")
+                        for nm in names: 
+                            append_row(xlsx,nm,county,t,td,r,rd,s,wi,url)
+                            total_added += 1
+                            print(f"      ✅ Added: {nm}")
+                        time.sleep(0.5)
+                    except Exception as e:
+                        print(f"      ❌ Error processing {url}: {e}")
+            except Exception as e:
+                print(f"   ❌ Error processing PLSS {tok}: {e}")
     except Exception as e:
         print(f"❌ Scraper error: {e}")
     finally: 
         d.quit()
-        print("🏁 Scraping completed")
+        print(f"🏁 Scraping completed. Total owners found: {total_added}")
+        
+# Main function that gets called
+if __name__=="__main__":
+    import argparse
+    p=argparse.ArgumentParser()
+    p.add_argument("--xlsx",required=True)
+    p.add_argument("--plss",required=True) 
+    p.add_argument("--county",default="Garfield")
+    a=p.parse_args()
+    
+    plss_list = [x.strip() for x in a.plss.split(",") if x.strip()]
+    print(f"🚀 Starting ECMC scraper for {len(plss_list)} locations in {a.county} County")
+    
+    run_orders_to_excel(a.xlsx, a.county, plss_list)
+    
+    # Count actual rows in Excel to verify
+    wb=load_workbook(a.xlsx); ws=wb["OWNERS"]
+    data_rows = ws.max_row - 1  # Subtract header row
+    print(f"📊 Excel file has {data_rows} data rows")
+    wb.close()
 PY
 
 cat > run_all_selenium.py <<'PY'
