@@ -142,11 +142,11 @@ const mockOwners = [
 
 export const Dashboard = () => {
   const stats = {
-    totalOwners: 247,
-    validWorkingInterest: 189,
-    exclusions: 58,
-    completedSections: 175,
-    totalSections: 175
+    totalOwners: 10,
+    validWorkingInterest: 10,
+    exclusions: 0,
+    completedSections: 10,
+    totalSections: 10
   };
 
   const progress = (stats.completedSections / stats.totalSections) * 100;
