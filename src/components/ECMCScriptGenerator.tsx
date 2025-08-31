@@ -77,8 +77,18 @@ def append_row(xlsx, owner, county, t,td,r,rd,s, wi, url):
     wb=load_workbook(xlsx); ws=wb["OWNERS"]
     dsu=f"{t}{td}-{r}{rd}-SEC{s:02d}".upper()
     # Match exact column order: Owner_Name,Canonical_Name,Entity_Type,County,Twp,Twp_Dir,Rng,Rng_Dir,Sec,DSU_Key,WI_Signal,Evidence_Link
-    ws.append([owner,owner,"LLC",county,str(t),td,str(r),rd,int(s),dsu,wi,url]); wb.save(xlsx)
-    print(f"      ✅ Added row: {owner} | {county} | {t}{td}-{r}{rd}-{s} | {wi}")
+    row_data = [owner,owner,"LLC",county,str(t),td,str(r),rd,int(s),dsu,wi,url]
+    ws.append(row_data)
+    wb.save(xlsx)
+    print(f"      ✅ Added row: {row_data}")
+    
+    # Verify what was written
+    wb_verify = load_workbook(xlsx); ws_verify = wb_verify["OWNERS"]
+    print(f"      📋 Excel now has {ws_verify.max_row} total rows (including header)")
+    if ws_verify.max_row > 1:
+        last_row = [cell.value for cell in ws_verify[ws_verify.max_row]]
+        print(f"      📄 Last row data: {last_row}")
+    wb_verify.close()
 
 def analyze_pdf(content:bytes):
     text=extract_text(BytesIO(content)) or ""; tl=text.lower()
