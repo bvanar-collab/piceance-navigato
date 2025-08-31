@@ -207,9 +207,9 @@ EOF
 
 echo "✅ Setup complete!"
 echo ""
-echo "To run the scraper:"
-echo "docker build -t ecmc-scraper ."
-echo "docker run -v \$(pwd):/app/output ecmc-scraper python scraper.py $@"
+echo "Now running the scraper automatically..."
+docker build -t ecmc-scraper .
+docker run -v "\$(pwd):/app/output" ecmc-scraper python scraper.py "\$@"
 echo ""
 `;
   };
