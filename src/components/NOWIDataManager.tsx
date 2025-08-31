@@ -219,112 +219,126 @@ echo ""
       <div className="max-w-6xl mx-auto">
         <header className="text-center mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-2">ECMC NOWI Agent</h1>
-          <p className="text-muted-foreground">Piceance Basin Working Interest Data Management</p>
+          <p className="text-muted-foreground mb-6">Piceance Basin Working Interest Data Management</p>
+          
+          <div className="max-w-4xl mx-auto bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg p-6 mb-8">
+            <h2 className="text-xl font-semibold mb-4">📋 Complete Process Overview</h2>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
+              <div className="bg-background/50 rounded-lg p-4 text-center">
+                <div className="text-primary font-bold text-lg mb-2">1️⃣</div>
+                <div className="font-medium">Add Locations</div>
+                <div className="text-muted-foreground">Configure PLSS entries</div>
+              </div>
+              <div className="bg-background/50 rounded-lg p-4 text-center">
+                <div className="text-primary font-bold text-lg mb-2">2️⃣</div>
+                <div className="font-medium">Generate Script</div>
+                <div className="text-muted-foreground">One-click download</div>
+              </div>
+              <div className="bg-background/50 rounded-lg p-4 text-center">
+                <div className="text-primary font-bold text-lg mb-2">3️⃣</div>
+                <div className="font-medium">Run Command</div>
+                <div className="text-muted-foreground">Execute in terminal</div>
+              </div>
+              <div className="bg-background/50 rounded-lg p-4 text-center">
+                <div className="text-primary font-bold text-lg mb-2">4️⃣</div>
+                <div className="font-medium">View Results</div>
+                <div className="text-muted-foreground">Import & analyze</div>
+              </div>
+            </div>
+          </div>
         </header>
 
-        {/* One-Click Setup */}
-        <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
+        {/* Quick Start Option */}
+        <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200 mb-8">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-xl">
-              <Play className="w-6 h-6 text-primary" />
-              🚀 One-Click Setup (Simplified Process)
+            <CardTitle className="flex items-center gap-2 text-xl text-green-800">
+              <Play className="w-6 h-6" />
+              🚀 Quick Start (Recommended)
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
-              <h4 className="font-semibold text-primary mb-3">⚡ Quick Start Instructions:</h4>
-              <div className="space-y-2 text-sm">
-                <div><strong>1)</strong> Add your PLSS locations using Step 1 below</div>
-                <div><strong>2)</strong> Click the "🚀 Generate & Download Script" button below</div>
-                <div><strong>3)</strong> Open terminal in Downloads folder and run the provided command</div>
-                <div><strong>4)</strong> Import the generated Excel file using Step 4 below</div>
+          <CardContent className="space-y-4">
+            <div className="text-green-700 bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="font-medium mb-2">✨ Simplified 4-Step Process:</div>
+              <div className="space-y-1 text-sm">
+                <div>• Step 1: Add your PLSS locations below → Step 2: Click generate button → Step 3: Run terminal command → Step 4: Import Excel file</div>
               </div>
             </div>
 
-            <div className="flex flex-col gap-4">
-              <Button 
-                onClick={handleOneClickSetup}
-                disabled={plssEntries.length === 0 || !county}
-                size="lg"
-                className="w-full text-lg py-6"
-              >
-                <Play className="w-5 h-5 mr-2" />
-                🚀 Generate & Download Script
-              </Button>
+            <Button 
+              onClick={handleOneClickSetup}
+              disabled={plssEntries.length === 0 || !county}
+              size="lg"
+              className="w-full text-lg py-6 bg-green-600 hover:bg-green-700"
+            >
+              <Play className="w-5 h-5 mr-2" />
+              🚀 Generate Script & Command
+            </Button>
 
-              {oneClickSetup && commandToCopy && (
-                <div className="bg-secondary/50 border border-secondary rounded-lg p-4 space-y-4">
-                  <h4 className="font-semibold flex items-center gap-2">
-                    <span className="bg-green-100 text-green-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">✓</span>
-                    Ready! Now run this command in your Downloads folder:
-                  </h4>
-                  
-                  <div className="bg-black text-green-400 p-3 rounded font-mono text-sm relative">
-                    <code>{commandToCopy}</code>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-2 top-2 text-green-400 hover:text-green-300"
-                      onClick={() => {
-                        navigator.clipboard.writeText(commandToCopy);
-                        toast({ title: "Copied!", description: "Command copied to clipboard" });
-                      }}
-                    >
-                      <Copy className="w-4 h-4" />
-                    </Button>
-                  </div>
+            {oneClickSetup && commandToCopy && (
+              <div className="bg-green-50 border border-green-300 rounded-lg p-4 space-y-3">
+                <h4 className="font-semibold text-green-800 flex items-center gap-2">
+                  ✅ Script Generated! Copy this command:
+                </h4>
+                
+                <div className="bg-black text-green-400 p-3 rounded font-mono text-sm relative">
+                  <code>{commandToCopy}</code>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-2 top-2 text-green-400 hover:text-green-300"
+                    onClick={() => {
+                      navigator.clipboard.writeText(commandToCopy);
+                      toast({ title: "Copied!", description: "Command copied to clipboard" });
+                    }}
+                  >
+                    <Copy className="w-4 h-4" />
+                  </Button>
+                </div>
 
-                  <div className="bg-yellow-50 border border-yellow-200 rounded p-3">
-                    <div className="text-sm text-yellow-800">
-                      <div className="font-medium mb-2">📋 Next Steps:</div>
-                      <div>1. Open terminal in Downloads folder (see Step 3 below for details)</div>
-                      <div>2. Paste and run the command above</div>
-                      <div>3. Wait 5-15 minutes for completion</div>
-                      <div>4. Import the generated Excel file in Step 4 below</div>
-                    </div>
+                <div className="bg-green-100 border border-green-300 rounded p-3">
+                  <div className="text-sm text-green-800">
+                    <div className="font-medium mb-1">📋 Next: Run in Terminal</div>
+                    <div>1. Open terminal in Downloads folder</div>
+                    <div>2. Paste the command above and press Enter</div>
+                    <div>3. Wait 5-15 minutes, then import the Excel file below</div>
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {(plssEntries.length === 0 || !county) && (
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
                 <div className="text-sm text-amber-800">
-                  ⚠️ Please complete Step 1 below first to add PLSS locations and select a county.
+                  ⚠️ First, complete Step 1 below to add PLSS locations and select a county.
                 </div>
               </div>
             )}
           </CardContent>
         </Card>
 
-        <div className="my-8 text-center text-muted-foreground text-sm">
-          <div className="border-t border-border pt-4">
-            Or follow the detailed step-by-step process below ↓
+        <div className="my-6 text-center">
+          <div className="border-t border-border pt-6 text-muted-foreground">
+            <div className="text-lg font-medium mb-2">📖 Detailed Step-by-Step Guide</div>
+            <div className="text-sm">For users who prefer manual control over each step</div>
           </div>
         </div>
 
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <span className="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">1</span>
-              Configure PLSS Search Parameters
+              <span className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">1</span>
+              Add Your PLSS Locations
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4">
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h4 className="font-semibold text-blue-800 mb-3">🎯 Step 1 Instructions:</h4>
-              <div className="space-y-2 text-sm text-blue-700">
-                <div><strong>1.1)</strong> Click in the "County" dropdown below</div>
-                <div><strong>1.2)</strong> Select either "Garfield" or "Rio Blanco" from the dropdown menu</div>
-                <div><strong>1.3)</strong> Click in the "Township" number field</div>
-                <div><strong>1.4)</strong> Type a number (e.g., "6" for Township 6)</div>
-                <div><strong>1.5)</strong> Click the "Township Direction" dropdown, choose "N" or "S"</div>
-                <div><strong>1.6)</strong> Click in the "Range" number field, type a number (e.g., "95")</div>
-                <div><strong>1.7)</strong> Click the "Range Direction" dropdown, choose "E" or "W"</div>
-                <div><strong>1.8)</strong> Click in the "Section" field, type a section number (1-36)</div>
-                <div><strong>1.9)</strong> Click the green "Add PLSS Entry" button</div>
-                <div><strong>1.10)</strong> Repeat steps 1.3-1.9 to add more locations</div>
-                <div><strong>1.11)</strong> Use red "×" buttons to remove unwanted entries</div>
+              <div className="text-blue-800 space-y-2 text-sm">
+                <div><strong>→</strong> Select county (Garfield or Rio Blanco)</div>
+                <div><strong>→</strong> Enter Township (number + N/S direction)</div>
+                <div><strong>→</strong> Enter Range (number + E/W direction)</div>
+                <div><strong>→</strong> Enter Section (1-36)</div>
+                <div><strong>→</strong> Click "Add PLSS Entry" to save</div>
+                <div><strong>→</strong> Repeat for additional locations</div>
               </div>
             </div>
             <PLSSForm onPLSSChange={handlePLSSChange} />
@@ -334,19 +348,16 @@ echo ""
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <span className="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">2</span>
-              Generate Docker Script
+              <span className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">2</span>
+              Download & Setup Script
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4">
             <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <h4 className="font-semibold text-green-800 mb-3">🔧 Step 2 Instructions:</h4>
-              <div className="space-y-2 text-sm text-green-700">
-                <div><strong>2.1)</strong> Scroll down to see the script download section</div>
-                <div><strong>2.2)</strong> Click the blue "Download piceance_agent_bootstrap.sh" button</div>
-                <div><strong>2.3)</strong> Your browser will save the file to Downloads folder</div>
-                <div><strong>2.4)</strong> Copy one of the command lines (Preset or Custom) by clicking the copy icon</div>
-                <div><strong>2.5)</strong> The command is now in your clipboard, ready to paste</div>
+              <div className="text-green-800 space-y-2 text-sm">
+                <div><strong>→</strong> Download the bootstrap script using the button below</div>
+                <div><strong>→</strong> Copy the generated command to your clipboard</div>
+                <div><strong>→</strong> Script will be saved to your Downloads folder</div>
               </div>
             </div>
             <ECMCScriptGenerator plssEntries={plssEntries} county={county} />
@@ -356,108 +367,30 @@ echo ""
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <span className="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">3</span>
-              Execute Script to Generate Excel Data
+              <span className="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">3</span>
+              Run Terminal Command
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4">
             <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-              <h4 className="font-semibold text-purple-800 mb-3">💻 Step 3 Instructions:</h4>
-              <div className="space-y-3 text-sm text-purple-700">
-                <div className="font-medium">📁 Opening Terminal in Downloads Directory:</div>
+              <div className="text-purple-800 space-y-3 text-sm">
+                <div><strong>📁 Open Terminal in Downloads:</strong></div>
+                <div className="pl-4 space-y-1">
+                  <div><strong>Mac:</strong> Right-click Downloads folder → "New Terminal at Folder"</div>
+                  <div><strong>Windows:</strong> Shift + Right-click Downloads → "Open PowerShell here"</div>
+                  <div><strong>Alternative:</strong> Open terminal → type <code className="bg-purple-100 px-1 rounded">cd Downloads</code></div>
+                </div>
                 
-                <div className="pl-4 space-y-2">
-                  <div><strong>Mac Users:</strong></div>
+                <div className="border-t border-purple-300 pt-3">
+                  <div><strong>💻 Execute Commands:</strong></div>
                   <div className="pl-4 space-y-1">
-                    <div>• Open Finder (click Finder icon in dock)</div>
-                    <div>• Click "Downloads" in the sidebar</div>
-                    <div>• Right-click in empty space in Downloads folder</div>
-                    <div>• Select "New Terminal at Folder" (or "Services" → "New Terminal at Folder")</div>
-                    <div>• Terminal opens automatically in Downloads directory</div>
+                    <div>1. Make script executable: <code className="bg-purple-100 px-1 rounded">chmod +x piceance_agent_bootstrap.sh</code> (Mac/Linux)</div>
+                    <div>2. Paste and run the command from Step 2</div>
+                    <div>3. Wait 5-15 minutes for completion</div>
+                    <div>4. Look for "✅ Done" message with Excel file location</div>
                   </div>
                 </div>
-
-                <div className="pl-4 space-y-2">
-                  <div><strong>Windows Users:</strong></div>
-                  <div className="pl-4 space-y-1">
-                    <div>• Open File Explorer (Windows key + E)</div>
-                    <div>• Click "Downloads" in the left sidebar</div>
-                    <div>• Hold Shift key and right-click in empty space</div>
-                    <div>• Select "Open PowerShell window here" or "Open command window here"</div>
-                    <div>• Command prompt opens in Downloads directory</div>
-                  </div>
-                </div>
-
-                <div className="pl-4 space-y-2">
-                  <div><strong>Alternative Method (All Systems):</strong></div>
-                  <div className="pl-4 space-y-1">
-                    <div>• Press Cmd+Space (Mac) or Windows key (PC)</div>
-                    <div>• Type "terminal" (Mac) or "cmd" (Windows) and press Enter</div>
-                    <div>• Type: <code className="bg-purple-100 px-1 rounded">cd Downloads</code> and press Enter</div>
-                    <div>• You are now in the Downloads directory</div>
-                  </div>
-                </div>
-
-                <div className="border-t border-purple-300 pt-3 mt-4">
-                  <div><strong>3.1)</strong> Use one of the methods above to open terminal in Downloads</div>
-                  <div><strong>3.2)</strong> Type: <code className="bg-purple-100 px-1 rounded">ls</code> (Mac) or <code className="bg-purple-100 px-1 rounded">dir</code> (Windows) and press Enter</div>
-                  <div><strong>3.3)</strong> Verify you see "piceance_agent_bootstrap.sh" in the list</div>
-                  <div><strong>3.4)</strong> Type: <code className="bg-purple-100 px-1 rounded">chmod +x piceance_agent_bootstrap.sh</code> and press Enter (Mac/Linux only)</div>
-                  <div><strong>3.5)</strong> Right-click in terminal and select "Paste" to paste the command from Step 2</div>
-                  <div><strong>3.6)</strong> Press Enter to start the script</div>
-                  <div><strong>3.7)</strong> Wait 2-15 minutes - you'll see "Building Docker image..." messages</div>
-                  <div><strong>3.8)</strong> When complete, you'll see "✅ Done. Deliverable: ..."</div>
-                  <div><strong>3.9)</strong> The Excel file is ready in the piceance-nowi folder</div>
-                </div>
               </div>
-            </div>
-
-            <div className="bg-muted/30 p-6 rounded-lg border-2 border-dashed border-primary/30">
-              <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <span className="bg-primary/10 text-primary rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">A</span>
-                Download & Setup Script
-              </h3>
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <div>• Download <code className="bg-muted px-1 rounded">piceance_agent_bootstrap.sh</code> from Step 2 above</div>
-                <div>• Open terminal in download directory</div>
-                <div>• Run: <code className="bg-muted px-1 rounded">chmod +x piceance_agent_bootstrap.sh</code></div>
-              </div>
-            </div>
-
-            <div className="bg-muted/30 p-6 rounded-lg border-2 border-dashed border-primary/30">
-              <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <span className="bg-primary/10 text-primary rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">B</span>
-                Execute ECMC Scraping
-              </h3>
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <div>• Copy command from Step 2 (either Preset or Custom)</div>
-                <div>• Paste and run in terminal</div>
-                <div>• Wait 2-15 minutes for Docker to build and scrape ECMC</div>
-                <div>• Watch for "✅ Done" message</div>
-              </div>
-            </div>
-
-            <div className="bg-muted/30 p-6 rounded-lg border-2 border-dashed border-primary/30">
-              <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <span className="bg-primary/10 text-primary rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">C</span>
-                Locate Generated Excel File
-              </h3>
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <div>• Find: <code className="bg-muted px-1 rounded">piceance-nowi/Piceance_NOWI_Template.xlsx</code></div>
-                <div>• File contains OWNERS tab with scraped NOWI data</div>
-                <div>• Each row has Evidence_Link (PDF URL) for verification</div>
-                <div>• Ready to import in Step 4 below</div>
-              </div>
-            </div>
-
-            <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-              <h4 className="font-medium text-amber-800 mb-2">⚠️ Important Notes:</h4>
-              <ul className="text-sm text-amber-700 space-y-1">
-                <li>• Requires Docker Desktop (Mac/Windows) or Docker Engine (Linux)</li>
-                <li>• Script creates chunked requests with delays to avoid server overload</li>
-                <li>• Process may take 5-15 minutes depending on PLSS location count</li>
-                <li>• Generated Excel file will be ready for import in Step 4</li>
-              </ul>
             </div>
           </CardContent>
         </Card>
@@ -465,22 +398,18 @@ echo ""
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <span className="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">4</span>
-              Import Generated Excel Data
+              <span className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">4</span>
+              Import Generated Excel File
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4">
             <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-              <h4 className="font-semibold text-orange-800 mb-3">📊 Step 4 Instructions:</h4>
-              <div className="space-y-2 text-sm text-orange-700">
-                <div><strong>4.1)</strong> Click the "Choose File" button below</div>
-                <div><strong>4.2)</strong> Navigate to your Downloads folder</div>
-                <div><strong>4.3)</strong> Look for folder named "piceance-nowi" and double-click it</div>
-                <div><strong>4.4)</strong> Find file named "Piceance_NOWI_Template.xlsx" and click it once</div>
-                <div><strong>4.5)</strong> Click the "Open" button in the file dialog</div>
-                <div><strong>4.6)</strong> Wait for "File uploaded and processed successfully" message</div>
-                <div><strong>4.7)</strong> The data will automatically load into the dashboard below</div>
-                <div><strong>4.8)</strong> You can now view and filter the imported NOWI records</div>
+              <div className="text-orange-800 space-y-2 text-sm">
+                <div><strong>→</strong> Click "Choose File" below</div>
+                <div><strong>→</strong> Navigate: Downloads → piceance-nowi folder</div>
+                <div><strong>→</strong> Select "Piceance_NOWI_Template.xlsx"</div>
+                <div><strong>→</strong> Wait for upload confirmation</div>
+                <div><strong>→</strong> Data will appear in dashboard below</div>
               </div>
             </div>
             <ExcelImporter onDataImported={handleDataImported} />
@@ -490,21 +419,17 @@ echo ""
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <span className="bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">5</span>
-              Review NOWI Data
+              <span className="bg-teal-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">5</span>
+              Review & Analyze Results
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4">
             <div className="bg-teal-50 border border-teal-200 rounded-lg p-4">
-              <h4 className="font-semibold text-teal-800 mb-3">📋 Step 5 Instructions:</h4>
-              <div className="space-y-2 text-sm text-teal-700">
-                <div><strong>5.1)</strong> Review the summary cards showing total records and statistics</div>
-                <div><strong>5.2)</strong> Use the search box to find specific owner names</div>
-                <div><strong>5.3)</strong> Click column headers to sort data (Name, County, DSU Key, etc.)</div>
-                <div><strong>5.4)</strong> Click "View PDF" links to verify original ECMC documents</div>
-                <div><strong>5.5)</strong> Use filters to narrow down results by county or working interest type</div>
-                <div><strong>5.6)</strong> Export filtered results for further analysis if needed</div>
-                <div><strong>5.7)</strong> Each record shows the evidence link for legal verification</div>
+              <div className="text-teal-800 space-y-2 text-sm">
+                <div><strong>→</strong> Review summary statistics and record counts</div>
+                <div><strong>→</strong> Search, sort, and filter owner data</div>
+                <div><strong>→</strong> Click "View PDF" links to verify documents</div>
+                <div><strong>→</strong> Export results for further analysis</div>
               </div>
             </div>
             <Dashboard importedData={importedData} />
