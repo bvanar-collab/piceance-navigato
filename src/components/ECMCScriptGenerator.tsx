@@ -167,10 +167,10 @@ if __name__=="__main__":
 PY
 
 cat > run_all_selenium.py <<'PY'
-import argparse,subprocess,shlex,time
+import argparse,subprocess,shlex,time,sys,os
 def sh(cmd): 
     print("→",cmd)
-    result = subprocess.run(shlex.split(cmd), capture_output=True, text=True)
+    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     if result.stdout:
         print(result.stdout)
     if result.stderr:
@@ -184,9 +184,6 @@ def main():
     p=argparse.ArgumentParser(); p.add_argument("--xlsx",required=True); p.add_argument("--plss",required=True); p.add_argument("--county",default="Garfield")
     a=p.parse_args()
     
-    # Don't regenerate template - it already exists
-    # sh("python generate_piceance_nowis_template.py")
-    
     tokens=[x.strip() for x in a.plss.split(",") if x.strip()]
     print(f"🚀 Starting scraper for {len(tokens)} PLSS entries in batches of 10")
     
@@ -194,12 +191,9 @@ def main():
         batch=",".join(tokens[i:i+10])
         print(f"📦 Processing batch {i//10+1}/{(len(tokens)+9)//10}: {len(batch.split(','))} entries")
         
-        # Call the scraper directly
-        success = sh(f"python -c \"\\
-import sys; sys.path.append('.')\\
-from ecmc_orders_selenium import run_orders_to_excel\\
-run_orders_to_excel('{a.xlsx}', '{a.county}', ['{batch.replace(',', '\',\'')}'])\\
-\"")
+        # Call the scraper script directly with proper arguments
+        cmd = f"python ecmc_orders_selenium.py --xlsx '{a.xlsx}' --county '{a.county}' --plss '{batch}'"
+        success = sh(cmd)
         
         if not success:
             print(f"❌ Batch {i//10+1} failed, continuing...")
