@@ -76,7 +76,9 @@ NON_WI=[r"overriding\\\\s+royalty",r"royalty\\\\s+deed",r"production\\\\s+paymen
 def append_row(xlsx, owner, county, t,td,r,rd,s, wi, url):
     wb=load_workbook(xlsx); ws=wb["OWNERS"]
     dsu=f"{t}{td}-{r}{rd}-SEC{s:02d}".upper()
-    ws.append([owner,"","LLC",county,t,td,r,rd,s,dsu,wi,url]); wb.save(xlsx)
+    # Match exact column order: Owner_Name,Canonical_Name,Entity_Type,County,Twp,Twp_Dir,Rng,Rng_Dir,Sec,DSU_Key,WI_Signal,Evidence_Link
+    ws.append([owner,owner,"LLC",county,str(t),td,str(r),rd,int(s),dsu,wi,url]); wb.save(xlsx)
+    print(f"      ✅ Added row: {owner} | {county} | {t}{td}-{r}{rd}-{s} | {wi}")
 
 def analyze_pdf(content:bytes):
     text=extract_text(BytesIO(content)) or ""; tl=text.lower()
