@@ -1,13 +1,11 @@
 import { Hero } from "@/components/Hero";
-import { PLSSForm } from "@/components/PLSSForm";
-import { Dashboard } from "@/components/Dashboard";
+import { NOWIDataManager } from "@/components/NOWIDataManager";
 
 const Index = () => {
   return (
     <main className="min-h-screen">
       <Hero />
-      <PLSSForm />
-      <Dashboard />
+      <NOWIDataManager />
     </main>
   );
 };

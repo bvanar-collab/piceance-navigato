@@ -7,7 +7,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Plus, X } from "lucide-react";
 
-export const PLSSForm = () => {
+interface PLSSFormProps {
+  onPLSSChange?: (entries: string[], county: string) => void;
+}
+
+export const PLSSForm = ({ onPLSSChange }: PLSSFormProps = {}) => {
   const [plssEntries, setPLSSEntries] = useState<string[]>([]);
   const [township, setTownship] = useState("");
   const [range, setRange] = useState("");
@@ -18,7 +22,9 @@ export const PLSSForm = () => {
     if (township && range && section && county) {
       const entry = `${township}S-${range}W-${section}`;
       if (!plssEntries.includes(entry)) {
-        setPLSSEntries([...plssEntries, entry]);
+        const newEntries = [...plssEntries, entry];
+        setPLSSEntries(newEntries);
+        onPLSSChange?.(newEntries, county);
       }
       setTownship("");
       setRange("");
@@ -27,7 +33,9 @@ export const PLSSForm = () => {
   };
 
   const removePLSSEntry = (entry: string) => {
-    setPLSSEntries(plssEntries.filter(e => e !== entry));
+    const newEntries = plssEntries.filter(e => e !== entry);
+    setPLSSEntries(newEntries);
+    onPLSSChange?.(newEntries, county);
   };
 
   const loadPreset = () => {
@@ -42,6 +50,7 @@ export const PLSSForm = () => {
     }
     setPLSSEntries(presetEntries);
     setCounty("Garfield");
+    onPLSSChange?.(presetEntries, "Garfield");
   };
 
   return (

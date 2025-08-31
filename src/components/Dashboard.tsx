@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Progress } from "@/components/ui/progress";
 import { Download, ExternalLink, MapPin, Users, FileText, TrendingUp } from "lucide-react";
 import * as XLSX from 'xlsx';
+import { type NOWIOwner } from "./ExcelImporter";
 
 // Non-operated working interest owners across Colorado oil and gas producing counties
 // Updated with real companies found through county records and industry research
@@ -313,45 +314,75 @@ const mockOwners = [
   }
 ];
 
-export const Dashboard = () => {
+interface DashboardProps {
+  importedData?: NOWIOwner[];
+}
+
+export const Dashboard = ({ importedData = [] }: DashboardProps) => {
+  // Use imported data if available, otherwise show sample data
+  const displayData = importedData.length > 0 ? importedData : mockOwners.slice(0, 5);
+  const isRealData = importedData.length > 0;
+
   const stats = {
-    totalOwners: 22,
-    validWorkingInterest: 22,
-    exclusions: 0,
-    completedSections: 22,
-    totalSections: 22
+    totalOwners: displayData.length,
+    validWorkingInterest: displayData.filter(owner => {
+      const wiSignal = 'WI_Signal' in owner ? owner.WI_Signal : owner.wi_signal;
+      return wiSignal?.includes('WI');
+    }).length,
+    exclusions: displayData.filter(owner => {
+      const wiSignal = 'WI_Signal' in owner ? owner.WI_Signal : owner.wi_signal;
+      return wiSignal?.includes('Exclude');
+    }).length,
+    completedSections: displayData.length,
+    totalSections: isRealData ? displayData.length : 500 // Estimated for Piceance Basin
   };
 
   const progress = (stats.completedSections / stats.totalSections) * 100;
 
   const exportToExcel = () => {
-    // Create workbook with OWNERS sheet
     const wb = XLSX.utils.book_new();
     
-    // Prepare data with all required columns
-    const excelData = mockOwners.map(owner => ({
-      'Owner_Name': owner.owner_name,
-      'Canonical_Name': owner.owner_name.replace(/\s+(LLC|INC|LP).*$/i, ''),
-      'Entity_Type': 'LLC',
-      'County': owner.county,
-      'Twp': owner.twp,
-      'Twp_Dir': 'S',
-      'Rng': owner.rng,
-      'Rng_Dir': 'W',
-      'Sec': owner.sec,
-      'DSU_Key': owner.dsu_key,
-      'WI_Signal': owner.wi_signal,
-      'Evidence_Link': owner.evidence_link,
-      'Contact_Email': owner.contact_email,
-      'Contact_Phone': owner.contact_phone,
-      'Mailing_Address': owner.mailing_address
-    }));
+    let excelData;
+    if (isRealData) {
+      // Export imported NOWI data in proper format
+      excelData = importedData.map(owner => ({
+        'Owner_Name': owner.Owner_Name,
+        'Canonical_Name': owner.Canonical_Name,
+        'Entity_Type': owner.Entity_Type,
+        'County': owner.County,
+        'Twp': owner.Twp,
+        'Twp_Dir': owner.Twp_Dir,
+        'Rng': owner.Rng,
+        'Rng_Dir': owner.Rng_Dir,
+        'Sec': owner.Sec,
+        'DSU_Key': owner.DSU_Key,
+        'WI_Signal': owner.WI_Signal,
+        'Evidence_Link': owner.Evidence_Link
+      }));
+    } else {
+      // Export sample data for demonstration
+      excelData = displayData.map(owner => ({
+        'Owner_Name': owner.owner_name,
+        'Canonical_Name': owner.owner_name.replace(/\s+(LLC|INC|LP).*$/i, ''),
+        'Entity_Type': 'LLC',
+        'County': owner.county,
+        'Twp': owner.twp.replace(/[NS]/i, ''),
+        'Twp_Dir': 'S',
+        'Rng': owner.rng.replace(/[EW]/i, ''),
+        'Rng_Dir': 'W',
+        'Sec': owner.sec,
+        'DSU_Key': owner.dsu_key,
+        'WI_Signal': owner.wi_signal,
+        'Evidence_Link': owner.evidence_link
+      }));
+    }
 
     const ws = XLSX.utils.json_to_sheet(excelData);
     XLSX.utils.book_append_sheet(wb, ws, 'OWNERS');
     
-    // Download file
-    const fileName = `Piceance_NOWI_Analysis_${new Date().toISOString().split('T')[0]}.xlsx`;
+    const fileName = isRealData 
+      ? `Piceance_NOWI_Results_${new Date().toISOString().split('T')[0]}.xlsx`
+      : `Piceance_NOWI_Sample_${new Date().toISOString().split('T')[0]}.xlsx`;
     XLSX.writeFile(wb, fileName);
   };
 
@@ -361,8 +392,14 @@ export const Dashboard = () => {
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">NOWI Analysis Dashboard</h2>
           <p className="text-muted-foreground text-lg">
-            Real-time results from Piceance Basin working interest analysis
+            {isRealData 
+              ? "Showing imported ECMC scraping results" 
+              : "Sample data - import Excel file to see real results"
+            }
           </p>
+          {!isRealData && (
+            <Badge variant="outline" className="mt-2">Demo Mode</Badge>
+          )}
         </div>
 
         {/* Stats Grid */}
@@ -428,7 +465,7 @@ export const Dashboard = () => {
         <Card className="shadow-card mb-8">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
-              <span>Processing Progress</span>
+              <span>{isRealData ? "Analysis Complete" : "Sample Progress"}</span>
               <Button variant="accent" size="sm" onClick={exportToExcel}>
                 <Download className="w-4 h-4 mr-2" />
                 Export Excel
@@ -443,7 +480,10 @@ export const Dashboard = () => {
               </div>
               <Progress value={progress} className="h-3" />
               <div className="text-xs text-muted-foreground">
-                Estimated completion: 14 minutes remaining
+                {isRealData 
+                  ? `Analysis completed - ${displayData.length} owners found`
+                  : "Upload Excel file to see real progress"
+                }
               </div>
             </div>
           </CardContent>
@@ -452,7 +492,9 @@ export const Dashboard = () => {
         {/* Results Table */}
         <Card className="shadow-card">
           <CardHeader>
-            <CardTitle>Recent Owner Discoveries</CardTitle>
+            <CardTitle>
+              {isRealData ? "Imported NOWI Owners" : "Sample Owner Data"}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
@@ -467,61 +509,79 @@ export const Dashboard = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {mockOwners.map((owner, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-medium">{owner.owner_name}</TableCell>
-                    <TableCell>
-                      <div className="text-sm space-y-1">
-                        <div className="flex items-center">
-                          <span className="w-12 text-muted-foreground">Email:</span>
-                          <a href={`mailto:${owner.contact_email}`} className="text-primary hover:underline">
-                            {owner.contact_email}
-                          </a>
+                {displayData.map((owner, index) => {
+                  // Handle both imported data format and mock data format
+                  const ownerName = 'Owner_Name' in owner ? owner.Owner_Name : owner.owner_name;
+                  const county = 'County' in owner ? owner.County : owner.county;
+                  const dsuKey = 'DSU_Key' in owner ? owner.DSU_Key : owner.dsu_key;
+                  const wiSignal = 'WI_Signal' in owner ? owner.WI_Signal : owner.wi_signal;
+                  const evidenceLink = 'Evidence_Link' in owner ? owner.Evidence_Link : owner.evidence_link;
+                  const locationDisplay = 'Twp' in owner 
+                    ? `${owner.Twp}${owner.Twp_Dir}-${owner.Rng}${owner.Rng_Dir}-S${owner.Sec}`
+                    : `${owner.twp}-${owner.rng}-S${owner.sec}`;
+
+                  return (
+                    <TableRow key={index}>
+                      <TableCell className="font-medium">{ownerName}</TableCell>
+                      <TableCell>
+                        {isRealData ? (
+                          <div className="text-sm text-muted-foreground">
+                            Contact info not included in ECMC data
+                          </div>
+                        ) : (
+                          <div className="text-sm space-y-1">
+                            <div className="flex items-center">
+                              <span className="w-12 text-muted-foreground">Email:</span>
+                              <a href={`mailto:${owner.contact_email}`} className="text-primary hover:underline">
+                                {owner.contact_email}
+                              </a>
+                            </div>
+                            <div className="flex items-center">
+                              <span className="w-12 text-muted-foreground">Phone:</span>
+                              <a href={`tel:${owner.contact_phone}`} className="hover:underline">
+                                {owner.contact_phone}
+                              </a>
+                            </div>
+                            <div className="flex items-start">
+                              <span className="w-12 text-muted-foreground">Addr:</span>
+                              <span className="text-xs leading-tight">{owner.mailing_address}</span>
+                            </div>
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm">
+                          <div>{county} County</div>
+                          <div className="text-muted-foreground">{locationDisplay}</div>
                         </div>
-                        <div className="flex items-center">
-                          <span className="w-12 text-muted-foreground">Phone:</span>
-                          <a href={`tel:${owner.contact_phone}`} className="hover:underline">
-                            {owner.contact_phone}
-                          </a>
-                        </div>
-                        <div className="flex items-start">
-                          <span className="w-12 text-muted-foreground">Addr:</span>
-                          <span className="text-xs leading-tight">{owner.mailing_address}</span>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="text-sm">
-                        <div>{owner.county} County</div>
-                        <div className="text-muted-foreground">{owner.twp}-{owner.rng}-S{owner.sec}</div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <code className="text-xs bg-muted px-2 py-1 rounded">{owner.dsu_key}</code>
-                    </TableCell>
-                    <TableCell>
-                      <Badge 
-                        variant={owner.wi_signal === "Order-WI" ? "default" : "destructive"}
-                        className="text-xs"
-                      >
-                        {owner.wi_signal}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="ghost" size="sm" asChild>
-                        <a 
-                          href={owner.evidence_link} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-xs"
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary">{dsuKey}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge 
+                          variant={wiSignal?.includes("WI") ? "default" : "secondary"}
+                          className={wiSignal?.includes("WI") ? "bg-earth-green text-white" : ""}
                         >
-                          <ExternalLink className="w-3 h-3 mr-1" />
-                          PDF
-                        </a>
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                          {wiSignal}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Button variant="ghost" size="sm" asChild>
+                          <a 
+                            href={evidenceLink} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1"
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                            {isRealData ? "PDF" : "View"}
+                          </a>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </CardContent>
