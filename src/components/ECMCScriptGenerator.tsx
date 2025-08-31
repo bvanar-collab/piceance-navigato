@@ -152,13 +152,23 @@ echo "⏳ Building Docker image ..."
 docker build -t piceance-agent .
 echo "⏳ Creating Excel workbook ..."
 docker run --rm -v "$(pwd)":/app piceance-agent python generate_piceance_nowis_template.py
-if [[ "\${PRESET}" == "piceance" ]]; then
-  PLSS_BATCH="\$(docker run --rm -v "\$(pwd)":/app piceance-agent python make_presets.py)"
+
+# Handle preset or custom PLSS entries
+if [[ "$PRESET" == "piceance" ]]; then
+  echo "🎯 Using Piceance Basin preset..."
+  PLSS_BATCH="$(docker run --rm -v "$(pwd)":/app piceance-agent python make_presets.py)"
   COUNTY="Garfield"
+  echo "Generated PLSS entries: $PLSS_BATCH"
+elif [[ -n "$PLSS_BATCH" ]]; then
+  echo "📍 Using custom PLSS entries: $PLSS_BATCH"
+else
+  echo "❌ ERROR: Please provide either --preset piceance or --plss 'entries'"
+  exit 1
 fi
-if [[ -z "\${PLSS_BATCH}" ]]; then echo "ERROR: provide --plss or --preset piceance"; exit 1; fi
+
+echo "🔍 Running scraper with PLSS entries..."
 docker run --rm -v "$(pwd)":/app piceance-agent \\
-  python run_all_selenium.py --xlsx Piceance_NOWI_Template.xlsx --plss "\${PLSS_BATCH}" --county "\${COUNTY}"
+  python run_all_selenium.py --xlsx Piceance_NOWI_Template.xlsx --plss "$PLSS_BATCH" --county "$COUNTY"
 echo "✅ Done. Deliverable: \${ROOT}/Piceance_NOWI_Template.xlsx"`);
 
   const { toast } = useToast();
