@@ -163,12 +163,26 @@ def scrape_ecmc_data(county, plss_entries):
             # interact with the ECMC search form
             
             # Mock data for demonstration
+            # Parse PLSS format: "T01N R094W S16" 
+            parts = entry.replace('T', '').replace('N', ' N').replace('S', ' S').replace('R', ' R').replace('W', ' W').replace('E', ' E').split()
+            twp = parts[0] if len(parts) > 0 else '01'
+            twp_dir = 'N' if 'N' in entry else 'S'
+            rng = parts[1] if len(parts) > 1 and parts[1].isdigit() else '094'
+            rng_dir = 'W' if 'W' in entry else 'E'
+            sec = int(parts[2]) if len(parts) > 2 and parts[2].isdigit() else 16
+            
             results.append({
-                'Name': f'Owner for {entry}',
+                'Owner_Name': f'Owner for {entry}',
+                'Canonical_Name': f'Canonical Owner for {entry}',
+                'Entity_Type': 'Individual',
                 'County': county,
-                'PLSS': entry,
+                'Twp': twp,
+                'Twp_Dir': twp_dir,
+                'Rng': rng,
+                'Rng_Dir': rng_dir,
+                'Sec': sec,
                 'DSU_Key': f'DSU_{entry}',
-                'Working_Interest': '12.5%',
+                'WI_Signal': '12.5%',
                 'Evidence_Link': f'https://ecmc.state.co.us/document_{entry}.pdf'
             })
             
