@@ -16,7 +16,10 @@ const mockOwners = [
     sec: 12,
     dsu_key: "6S-95W-SEC12",
     wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-123.pdf"
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-123.pdf",
+    contact_email: "acquisitions@dividend-energy.com",
+    contact_phone: "(303) 555-0123",
+    mailing_address: "1801 California St, Denver, CO 80202"
   },
   {
     owner_name: "Pioneer Natural Resources",
@@ -26,7 +29,10 @@ const mockOwners = [
     sec: 13,
     dsu_key: "6S-95W-SEC13",
     wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-124.pdf"
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-124.pdf",
+    contact_email: "landman@pxd.com",
+    contact_phone: "(972) 444-9001",
+    mailing_address: "777 Hidden Ridge, Irving, TX 75038"
   },
   {
     owner_name: "Chesapeake Operating LLC",
@@ -36,7 +42,10 @@ const mockOwners = [
     sec: 6,
     dsu_key: "7S-96W-SEC06",
     wi_signal: "Order-WI",
-    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-125.pdf"
+    evidence_link: "https://ecmc.state.co.us/documents/orders/2024/order-125.pdf",
+    contact_email: "operations@chk.com",
+    contact_phone: "(405) 848-8000",
+    mailing_address: "6100 N Western Ave, Oklahoma City, OK 73118"
   },
 ];
 
@@ -68,7 +77,10 @@ export const Dashboard = () => {
       'Sec': owner.sec,
       'DSU_Key': owner.dsu_key,
       'WI_Signal': owner.wi_signal,
-      'Evidence_Link': owner.evidence_link
+      'Evidence_Link': owner.evidence_link,
+      'Contact_Email': owner.contact_email,
+      'Contact_Phone': owner.contact_phone,
+      'Mailing_Address': owner.mailing_address
     }));
 
     const ws = XLSX.utils.json_to_sheet(excelData);
@@ -183,6 +195,7 @@ export const Dashboard = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Owner Name</TableHead>
+                  <TableHead>Contact Info</TableHead>
                   <TableHead>Location</TableHead>
                   <TableHead>DSU Key</TableHead>
                   <TableHead>WI Signal</TableHead>
@@ -193,6 +206,26 @@ export const Dashboard = () => {
                 {mockOwners.map((owner, index) => (
                   <TableRow key={index}>
                     <TableCell className="font-medium">{owner.owner_name}</TableCell>
+                    <TableCell>
+                      <div className="text-sm space-y-1">
+                        <div className="flex items-center">
+                          <span className="w-12 text-muted-foreground">Email:</span>
+                          <a href={`mailto:${owner.contact_email}`} className="text-primary hover:underline">
+                            {owner.contact_email}
+                          </a>
+                        </div>
+                        <div className="flex items-center">
+                          <span className="w-12 text-muted-foreground">Phone:</span>
+                          <a href={`tel:${owner.contact_phone}`} className="hover:underline">
+                            {owner.contact_phone}
+                          </a>
+                        </div>
+                        <div className="flex items-start">
+                          <span className="w-12 text-muted-foreground">Addr:</span>
+                          <span className="text-xs leading-tight">{owner.mailing_address}</span>
+                        </div>
+                      </div>
+                    </TableCell>
                     <TableCell>
                       <div className="text-sm">
                         <div>{owner.county} County</div>
