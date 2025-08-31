@@ -300,15 +300,15 @@ echo "✅ Done. Deliverable: \${ROOT}/Piceance_NOWI_Template.xlsx"`);
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'piceance_agent_bootstrap.sh';
+    a.download = `piceance_agent_bootstrap_${Date.now()}.sh`; // Add timestamp to force new download
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
     toast({
-      title: "Script downloaded",
-      description: "piceance_agent_bootstrap.sh ready for execution",
+      title: "Script downloaded", 
+      description: `piceance_agent_bootstrap_${Date.now()}.sh ready for execution`,
     });
   };
 
