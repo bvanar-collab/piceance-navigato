@@ -153,7 +153,7 @@ docker build -t piceance-agent .
 echo "⏳ Creating Excel workbook ..."
 docker run --rm -v "$(pwd)":/app piceance-agent python generate_piceance_nowis_template.py
 if [[ "\${PRESET}" == "piceance" ]]; then
-  PLSS_BATCH="$(python make_presets.py)"
+  PLSS_BATCH="\$(docker run --rm -v "\$(pwd)":/app piceance-agent python make_presets.py)"
   COUNTY="Garfield"
 fi
 if [[ -z "\${PLSS_BATCH}" ]]; then echo "ERROR: provide --plss or --preset piceance"; exit 1; fi
