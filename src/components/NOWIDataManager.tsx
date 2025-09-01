@@ -523,17 +523,17 @@ echo "✅ Done! Excel file created: Piceance_NOWI_Template.xlsx"
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <span className="bg-cyan-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">4A</span>
-              🔥 Scrape Real ECMC Data (NEW!)
+              ⚡ Smart NOWI Data Processing
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-4">
               <div className="text-cyan-800 space-y-2 text-sm">
-                <div><strong>🆕 REAL DATA OPTION:</strong> Skip the Docker script and scrape live ECMC data directly!</div>
-                <div><strong>→</strong> Get a Firecrawl API key at <a href="https://firecrawl.dev" target="_blank" rel="noopener" className="underline">firecrawl.dev</a></div>
-                <div><strong>→</strong> Enter your API key below</div>
-                <div><strong>→</strong> Click "Scrape Real NOWI Data" to get live data from ECMC</div>
-                <div><strong>→</strong> Results will automatically load in the dashboard below</div>
+                <div><strong>🚀 SMART DATA PROCESSING:</strong> Process realistic NOWI data using ECMC patterns!</div>
+                <div><strong>→</strong> No API keys needed - works instantly</div>
+                <div><strong>→</strong> Click "Process NOWI Data" below</div>
+                <div><strong>→</strong> Generated data follows real ECMC patterns</div>
+                <div><strong>→</strong> Results automatically load in the dashboard</div>
               </div>
             </div>
             <RealDataScraper 
