@@ -295,19 +295,32 @@ echo "✅ Done. Deliverable: \${ROOT}/Piceance_NOWI_Template.xlsx"`);
   };
 
   const downloadScript = () => {
+    console.log("downloadScript() called");
+    const timestamp = Date.now();
+    const filename = `piceance_agent_bootstrap_${timestamp}.sh`;
+    
+    console.log("Creating blob with script content length:", scriptContent.length);
     const blob = new Blob([scriptContent], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
+    
+    console.log("Creating download link for filename:", filename);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `piceance_agent_bootstrap_${Date.now()}.sh`; // Add timestamp to force new download
+    a.download = filename;
+    
+    // Debug: log the created link
+    console.log("Download link created:", { href: a.href, download: a.download });
+    
     document.body.appendChild(a);
+    console.log("Triggering click on download link");
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
+    console.log("Download should be complete, showing toast");
     toast({
       title: "Script downloaded", 
-      description: `piceance_agent_bootstrap_${Date.now()}.sh ready for execution`,
+      description: `${filename} ready for execution`,
     });
   };
 
