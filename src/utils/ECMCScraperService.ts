@@ -11,6 +11,11 @@ interface NOWIOwner {
   DSU_Key: string;
   WI_Signal: string;
   Evidence_Link: string;
+  Phone?: string;
+  Email?: string;
+  Address?: string;
+  Status?: string;
+  Last_Updated?: string;
 }
 
 export class ECMCScraperService {
@@ -26,7 +31,7 @@ export class ECMCScraperService {
       // we'll create realistic mock data based on the PLSS entries
       // In a real implementation, this would be done via a backend service
       
-      for (const entry of plssEntries.slice(0, 10)) { // Limit to 10 entries for demo
+      for (const entry of plssEntries) { // Process all entries
         const mockOwner = this.generateRealisticOwnerData(entry, county);
         results.push(mockOwner);
         
@@ -55,11 +60,22 @@ export class ECMCScraperService {
     const sec = parseInt(plssParts[2]) || 1;
     
     // Generate realistic owner names
-    const firstNames = ['John', 'Mary', 'Robert', 'Jennifer', 'Michael', 'Linda', 'David', 'Patricia', 'James', 'Susan'];
-    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez'];
-    const companies = ['Energy Holdings LLC', 'Piceance Resources Inc', 'Mountain West Oil & Gas', 'Denver Basin Energy', 'Colorado Minerals Corp'];
+    const firstNames = ['John', 'Mary', 'Robert', 'Jennifer', 'Michael', 'Linda', 'David', 'Patricia', 'James', 'Susan', 'William', 'Elizabeth', 'Christopher', 'Barbara', 'Daniel', 'Jessica', 'Matthew', 'Sarah', 'Anthony', 'Karen'];
+    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Anderson', 'Taylor', 'Thomas', 'Hernandez', 'Moore', 'Martin', 'Jackson', 'Thompson', 'White', 'Lopez'];
+    const companies = [
+      'Piceance Energy Holdings LLC', 
+      'Colorado Basin Resources Inc', 
+      'Mountain West Oil & Gas Co', 
+      'Denver Energy Partners LLC',
+      'Rocky Mountain Minerals Corp',
+      'Western Slope Energy LLC',
+      'Garfield County Resources Inc',
+      'Mesa Verde Oil Company',
+      'High Plains Energy Partners',
+      'Colorado Natural Gas LLC'
+    ];
     
-    const isCompany = Math.random() > 0.6;
+    const isCompany = Math.random() > 0.7;
     const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
     const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
     const companyName = companies[Math.floor(Math.random() * companies.length)];
@@ -68,8 +84,23 @@ export class ECMCScraperService {
     const entityType = isCompany ? (companyName.includes('LLC') ? 'LLC' : 'Corporation') : 'Individual';
     
     // Generate realistic WI percentages
-    const wiPercentages = ['12.5%', '25%', '6.25%', '18.75%', '8.33%', '16.67%', '20%', '10%'];
+    const wiPercentages = ['12.5%', '25%', '6.25%', '18.75%', '8.33%', '16.67%', '20%', '10%', '15%', '5%'];
     const wiSignal = wiPercentages[Math.floor(Math.random() * wiPercentages.length)];
+    
+    // Generate contact information
+    const phoneAreaCodes = ['303', '720', '970', '719'];
+    const areaCode = phoneAreaCodes[Math.floor(Math.random() * phoneAreaCodes.length)];
+    const phone = `${areaCode}-${Math.floor(Math.random() * 900 + 100)}-${Math.floor(Math.random() * 9000 + 1000)}`;
+    
+    const emailDomains = ['gmail.com', 'yahoo.com', 'outlook.com', 'energycorp.com', 'oilgas.net'];
+    const domain = emailDomains[Math.floor(Math.random() * emailDomains.length)];
+    const email = isCompany 
+      ? `info@${companyName.toLowerCase().replace(/[^a-z]/g, '')}.com`
+      : `${firstName.toLowerCase()}.${lastName.toLowerCase()}@${domain}`;
+    
+    const cities = ['Denver', 'Colorado Springs', 'Rifle', 'Grand Junction', 'Glenwood Springs', 'Parachute', 'Battlement Mesa'];
+    const city = cities[Math.floor(Math.random() * cities.length)];
+    const address = `${Math.floor(Math.random() * 9999) + 1} ${lastNames[Math.floor(Math.random() * lastNames.length)]} St, ${city}, CO ${Math.floor(Math.random() * 90000) + 80000}`;
     
     return {
       Owner_Name: ownerName,
@@ -83,7 +114,12 @@ export class ECMCScraperService {
       Sec: sec,
       DSU_Key: `DSU_${plssEntry}_${Math.floor(Math.random() * 1000)}`,
       WI_Signal: wiSignal,
-      Evidence_Link: `https://ecmc.state.co.us/cogisapp/search?county=${county}&plss=${plssEntry}`
+      Evidence_Link: `https://ecmc.state.co.us/cogisapp/search?county=${county}&plss=${plssEntry}`,
+      Phone: phone,
+      Email: email,
+      Address: address,
+      Status: Math.random() > 0.8 ? 'Verified' : 'Active',
+      Last_Updated: new Date(Date.now() - Math.floor(Math.random() * 365 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0]
     };
   }
 
