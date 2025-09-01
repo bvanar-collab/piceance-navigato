@@ -355,7 +355,7 @@ echo "✅ Done. Deliverable: \${ROOT}/Piceance_NOWI_Template.xlsx"`);
                     <div>1. Copy & paste: chmod +x piceance_agent_bootstrap_*.sh</div>
                     <div>2. Copy & paste: ls piceance_agent_bootstrap_*.sh</div>
                     <div>3. Copy the exact filename shown</div>
-                    <div>4. Paste filename in: ./[filename] --preset piceance</div>
+                    <div>4. Type ./ then paste filename then add --preset piceance</div>
                   </div>
                 </div>
               </div>
