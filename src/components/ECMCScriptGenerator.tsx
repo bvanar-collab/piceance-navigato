@@ -352,10 +352,10 @@ echo "✅ Done. Deliverable: \${ROOT}/Piceance_NOWI_Template.xlsx"`);
                 <div className="p-4 bg-muted/30 rounded-md border">
                   <h4 className="font-medium mb-2 text-sm">Setup Instructions:</h4>
                   <div className="space-y-1 text-xs text-muted-foreground font-mono">
-                    <div>1. chmod +x piceance_agent_bootstrap_*.sh</div>
-                    <div>2. Run: ls piceance_agent_bootstrap_*.sh</div>
-                    <div>3. Copy exact filename and run with --preset piceance</div>
-                    <div>4. Import resulting Excel file ↑</div>
+                    <div>1. Copy & paste: chmod +x piceance_agent_bootstrap_*.sh</div>
+                    <div>2. Copy & paste: ls piceance_agent_bootstrap_*.sh</div>
+                    <div>3. Copy the exact filename shown</div>
+                    <div>4. Paste filename in: ./[filename] --preset piceance</div>
                   </div>
                 </div>
               </div>
