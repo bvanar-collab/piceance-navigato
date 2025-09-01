@@ -2,6 +2,7 @@ import { useState } from "react";
 import { PLSSForm } from "./PLSSForm";
 import { ECMCScriptGenerator } from "./ECMCScriptGenerator";
 import { ExcelImporter, type NOWIOwner } from "./ExcelImporter";
+import { RealDataScraper } from "./RealDataScraper";
 import { Dashboard } from "./Dashboard";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
@@ -521,13 +522,39 @@ echo "✅ Done! Excel file created: Piceance_NOWI_Template.xlsx"
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <span className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">4</span>
-              Import Generated Excel File
+              <span className="bg-cyan-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">4A</span>
+              🔥 Scrape Real ECMC Data (NEW!)
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-4">
+              <div className="text-cyan-800 space-y-2 text-sm">
+                <div><strong>🆕 REAL DATA OPTION:</strong> Skip the Docker script and scrape live ECMC data directly!</div>
+                <div><strong>→</strong> Get a Firecrawl API key at <a href="https://firecrawl.dev" target="_blank" rel="noopener" className="underline">firecrawl.dev</a></div>
+                <div><strong>→</strong> Enter your API key below</div>
+                <div><strong>→</strong> Click "Scrape Real NOWI Data" to get live data from ECMC</div>
+                <div><strong>→</strong> Results will automatically load in the dashboard below</div>
+              </div>
+            </div>
+            <RealDataScraper 
+              onDataScraped={handleDataImported}
+              plssEntries={plssEntries}
+              county={county}
+            />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <span className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">4B</span>
+              Import Generated Excel File (Alternative)
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
               <div className="text-orange-800 space-y-2 text-sm">
+                <div><strong>DOCKER SCRIPT OPTION:</strong> Use this if you prefer the Docker approach</div>
                 <div><strong>→</strong> Click "Choose File" below</div>
                 <div><strong>→</strong> Navigate: Downloads → piceance-nowi folder</div>
                 <div><strong>→</strong> Select "Piceance_NOWI_Template.xlsx"</div>
