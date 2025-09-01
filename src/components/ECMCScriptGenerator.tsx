@@ -45,17 +45,16 @@ cat > Dockerfile <<'DOCKER'
 FROM python:3.11-slim
 WORKDIR /app
 
-# Install Chrome and dependencies using modern approach
+# Install Chrome and dependencies using direct .deb download
 RUN apt-get update && apt-get install -y --no-install-recommends \\
     fonts-dejavu-core \\
     wget \\
     curl \\
-    gnupg \\
     unzip \\
-    && wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome-keyring.gpg \\
-    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \\
-    && apt-get update \\
-    && apt-get install -y google-chrome-stable \\
+    && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \\
+    && dpkg -i google-chrome-stable_current_amd64.deb || true \\
+    && apt-get install -y -f \\
+    && rm google-chrome-stable_current_amd64.deb \\
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt /app/requirements.txt
@@ -353,9 +352,10 @@ echo "✅ Done. Deliverable: \${ROOT}/Piceance_NOWI_Template.xlsx"`);
                 <div className="p-4 bg-muted/30 rounded-md border">
                   <h4 className="font-medium mb-2 text-sm">Setup Instructions:</h4>
                   <div className="space-y-1 text-xs text-muted-foreground font-mono">
-                    <div>1. chmod +x piceance_agent_bootstrap.sh</div>
-                    <div>2. Run command below ↓</div>
-                    <div>3. Import resulting Excel file ↑</div>
+                    <div>1. chmod +x piceance_agent_bootstrap_*.sh</div>
+                    <div>2. Run: ls piceance_agent_bootstrap_*.sh</div>
+                    <div>3. Copy exact filename and run with --preset piceance</div>
+                    <div>4. Import resulting Excel file ↑</div>
                   </div>
                 </div>
               </div>
